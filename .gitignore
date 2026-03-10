@@ -47,3 +47,14 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+.Rproj.user
+
+# Large files that exceed 10MB
+MAPS_BANDING_capture_data.csv
+MAPS_EFFORT_net_open_and_close_times.csv
+North_America_TAVG_Gridded_Op25deg.nc
+dw_sppmodels.rds
+lw_sppmodels.rds
+
+# Geospatial nighttime light files (.tif) that are large
+*.tif
