@@ -1,0 +1,21 @@
+﻿Species,SPEC,Tree_name,C.T,Source,Museum Collection IDs
+Baeolophus bicolor,TUTI,Baeolophus_bicolor,0.593181818,Senzaki et al. 2020,NA
+Cardellina pusilla,WIWA,Wilsonia_pusilla,0.50623608,Jennings et al. 2026,NA
+Cardinalis cardinalis,NOCA,Cardinalis_cardinalis,0.52722063,Wilson et al. 2021,NA
+Catharus ustulatus,SWTH,Catharus_ustulatus,0.476849208,Ritland 1982,NA
+Dendroica coronata,AUWA,Dendroica_coronata,0.489530445,Jennings et al. 2026,NA
+Dryobates pubescens,DOWO,Picoides_pubescens,0.472922849,Jennings et al. 2026,NA
+Dumetella carolinensis,GRCA,Dumetella_carolinensis,0.510185185,Wilson et al. 2021,NA
+Geothlypis trichas,COYE,Geothlypis_trichas,0.484113805,Jennings et al. 2026,NA
+Hylocichla mustelina,WOTH,Hylocichla_mustelina,0.495443248,Jennings et al. 2026,NA
+Junco hyemalis,ORJU,Junco_hyemalis,0.443332165,Jennings et al. 2026,NA
+Melospiza lincolnii,LISP,Melospiza_lincolnii,NA,NA,NA
+Melospiza melodia,SOSP,Melospiza_melodia,0.616010499,Jennings et al. 2026,NA
+Oporornis tolmiei,MGWA,Oporornis_tolmiei,0.476686052,Jennings et al. 2026,NA
+Poecile atricapillus,BCCH,Parus_atricapillus,0.425131305,Jennings et al. 2026,NA
+Seiurus aurocapilla,OVEN,Seiurus_aurocapilla,NA,NA,NA
+Setophaga petechia,YEWA,Dendroica_petechia,0.4771,This study,"Carnegie Museum of Natural History: S2052, S7619, S3378, S7614"
+Thryomanes bewickii,BEWR,Thryomanes_bewickii,0.456880734,Jennings et al. 2026,NA
+Thryothorus ludovicianus,CARW,Thryothorus_ludovicianus,0.493865031,Wilson et al. 2021,NA
+Troglodytes aedon,HOWR,Troglodytes_aedon,0.445224719,Wilson et al. 2021,NA
+Turdus migratorius,AMRO,Turdus_migratorius,0.480429581,Wolf & Francis 2025,NA
