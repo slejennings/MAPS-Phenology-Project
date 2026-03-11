@@ -124,6 +124,7 @@ phydat_20spp <- geiger::treedata(tree, traits_20spp, sort=T) # join tree with da
 birdtree_20spp <- phydat_20spp$phy # this is our trimmed tree for the 20 species
 
 # these are the data associated with our trimmed tree
+# NOTE: IF NOT USING WAIC, CHANGE THE NAME OF THE LAST COLUMN INSIDE MUTATE TO elpd_SE_diff
 birddat_20spp <- as.data.frame(phydat_20spp$data) %>% # convert to df
   mutate(across(c(scaletempanom_DW_tstat:waic_diff_model), as.numeric)) # make sure columns that need to be are numeric
 
@@ -133,6 +134,7 @@ phydat_18spp <- geiger::treedata(tree, eye_18spp, sort=T) # join tree with data
 birdtree_18spp <- phydat_18spp$phy # this is our trimmed tree for the 18 species
 
 # these are the data associated with our trimmed tree
+# NOTE: IF NOT USING WAIC, CHANGE THE NAME OF THE LAST COLUMN INSIDE MUTATE TO elpd_SE_diff
 birddat_18spp <- as.data.frame(phydat_18spp$data) %>% # convert to df
   mutate(across(c(scaletempanom_DW_tstat:waic_diff_model), as.numeric)) # make sure columns that need to be are numeric
 

@@ -19,12 +19,14 @@ library(loo)
 # clear the environment to free up memory
 rm(list = ls(all.names = TRUE))
 
-# import decision window models
-dw_sppmodels <- readRDS(here("Models/Model Outputs", "dw_sppmodels.rds")) %>%
+# import decision window models 
+# using models with no GP term
+dw_sppmodels <- readRDS(here("Models/Model Outputs", "dw_sppmodels_noGP.rds")) %>%
   select(SPEC, dw_model)
 
 # import long-term window models
-lw_sppmodels <- readRDS(here("Models/Model Outputs", "lw_sppmodels.rds")) %>%
+# using models with no GP term
+lw_sppmodels <- readRDS(here("Models/Model Outputs", "lw_sppmodels_noGP.rds")) %>%
   select(SPEC, lw_model)
 
 # put the two models together into a single df
@@ -75,7 +77,8 @@ waic_SE <- models_df %>%
 # note: in the above section of code, we do not use loo_compare to compare the two models as the output of this function does not present differences based on waic values
 # instead, we manually calculate the difference in waic between the two models (stored in the column waic_diff)
 # unlike elpd, the preferred model is the one with the lower waic
-# lastly, we do not obtain the difference in the SE of waic. For elpd (above), the difference in SE provided by loo_compare() is not derived by simply subtracting the two SE values for the models
+# lastly, we do not obtain the difference in the SE of waic. 
+# For elpd (above), the difference in SE provided by loo_compare() and it is not derived by simply subtracting the two SE values for the models
 # As we can't easily calculate this value for waic, we leave it out of this data frame
 
 View(waic_SE)

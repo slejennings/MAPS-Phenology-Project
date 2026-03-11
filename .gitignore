@@ -55,6 +55,12 @@ MAPS_EFFORT_net_open_and_close_times.csv
 North_America_TAVG_Gridded_Op25deg.nc
 dw_sppmodels.rds
 lw_sppmodels.rds
+dw_sppmodels_k20.rds
+lw_sppmodels_k20.rds
+dw_sppmodels_noGP.rds
+lw_sppmodels_noGP.rds
+dwmodels_loo.rds
+lwmodels_loo.rds
 
 # Geospatial nighttime light files (.tif) that are large
 *.tif

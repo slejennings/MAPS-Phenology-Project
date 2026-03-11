@@ -26,11 +26,10 @@ library(ggtree)
 tree <- read.tree(here("Data", "Jetz_ConsensusPhy.tre"))
 
 # decision window model results
-DW_mods <- readRDS(here("Models/Model Outputs", "dw_model_summaries.rds"))
+dw_models <- readRDS(here("Models/Model Outputs", "dw_model_summaries.rds"))
 
 # long-term window model results
-LW_mods <- readRDS(here("Models/Model Outputs", "lw_model_summaries.rds")) %>%
-  filter(Parameter != "scalelight_tstat") ### CHECK THAT WE DEFINITELY WANT TO ONLY DISPLAY DECISION WINDOW LIGHT T-STATS
+lw_models <- readRDS(here("Models/Model Outputs", "lw_model_summaries.rds")) 
 
 # Sheet to convert 4-letter bird codes to commonnames
 codetospec <- read_csv(here("Data", "BirdCodetoSpecies.csv")) %>%
@@ -46,19 +45,31 @@ eye <- read.csv(here("Data", "species_eyes.csv"))
 ######### Figure 3: heatmap 
 ########################################################################################################
 
-# combine decision and long-term window models
-allmods <- rbind(DW_mods, LW_mods)
 
-# we need to calculate t-statistics for the estimates generated in these models
+# we need to combine decision and long-term window models
+# before doing this, we need to calculate t-statistics for the estimates generated in these models
 # we will do this using the estimate divided by the standard error
-# the value of the t-statistic for each variable will be depicted in the heatmap
-allmods_wide <- allmods %>%
+# we also need to give the light t-statistic a unique name to differentiate the DW vs LW model
+
+dw_models_wide <- dw_models %>%
   filter(Parameter %in% c(
     "scaletempanom_DW_tstat",
-    "scaletempanom_LW_tstat",
     "scaleprcp_DW_total_tstat",
-    "scaleprcp_LW_total_tstat",
     "scaleprcp_DW_cov_tstat",
+    "scalelight_tstat"
+  )) %>%
+  rowwise() %>%
+  mutate(tvalue = Estimate/Est.Error) %>%
+  select(SPEC, Parameter, tvalue) %>%
+  pivot_wider(
+    names_from = Parameter,   # new column names from "Parameter"
+    values_from = tvalue) %>%  # values to fill from "tvalue"
+  rename(scalelight_DW_tstat = scalelight_tstat) # give light t-statistic a unique name
+
+lw_models_wide <- lw_models %>%
+  filter(Parameter %in% c(
+    "scaletempanom_LW_tstat",
+    "scaleprcp_LW_total_tstat",
     "scaleprcp_LW_cov_tstat",
     "scalelight_tstat"
   )) %>%
@@ -67,11 +78,15 @@ allmods_wide <- allmods %>%
   select(SPEC, Parameter, tvalue) %>%
   pivot_wider(
     names_from = Parameter,   # new column names from "Parameter"
-    values_from = tvalue)   # values to fill from "tvalue"
+    values_from = tvalue) %>%   # values to fill from "tvalue"
+  rename(scalelight_LW_tstat = scalelight_tstat) # give light t-statistic a unique name
 
-# join allmods_wide with eye df that contains scientific names for species
+# combine t-statistics from both long-term and decision window models
+all_models_wide <- left_join(dw_models_wide, lw_models_wide)
+
+# join all_models_wide with eye df that contains scientific names for species
 # also join to codetospec which shows how four letter bird codes translate to common names
-allmods_spp <- full_join(allmods_wide, eye, by="SPEC") %>% 
+allmods_spp <- full_join(all_models_wide, eye, by="SPEC") %>% 
   select(-C.T, -Source, -Museum.Collection.IDs) %>%
   left_join(., codetospec) %>%
   column_to_rownames(., var = "Tree_name")
@@ -100,13 +115,14 @@ treeplot <- ggtree(birdtree) %<+%
 treeplot
 
 # get data for the heatmap
+# NOTE: USING THE LIGHT T-STAT FROM THE DECISION WINDOW MODEL FOR THIS PLOT FOR NOW - WE MAY WANT TO REVISIT THIS
 heatmap_dat <- allmods_spp %>% 
-  select(-SPEC, -Species, -COMMONNAME) %>%
   select(scaletempanom_DW_tstat, scaletempanom_LW_tstat, scaleprcp_DW_total_tstat, scaleprcp_LW_total_tstat,
-         scaleprcp_DW_cov_tstat, scaleprcp_LW_cov_tstat, scalelight_tstat)
+         scaleprcp_DW_cov_tstat, scaleprcp_LW_cov_tstat, scalelight_DW_tstat)
   
 # now create heatmap to go with the tree
 # plot species effects as heatmap with phylogenetic tree on left 
+# NOTE: MAY NEED TO ADJUST THE LIMITS OF THE DIVERGING PALETTE IF T-STATS EXCEED -3.5 OR 3.5
 treeplusheatmap <- gheatmap(
   treeplot, heatmap_dat, offset=50, width=1.2,
   colnames_angle = 75, 
