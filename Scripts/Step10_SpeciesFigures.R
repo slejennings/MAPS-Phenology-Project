@@ -101,7 +101,7 @@ birddat <- as.data.frame(phydat$data) %>% # convert to df
   mutate(across(c(2:8), as.numeric)) # make sure columns containing t-stats are numeric
 
 # get names for labeling the tree. 
-# we need a df with scientific names using the under underscore (Tree_name) and the common names we want to use as labels
+# we need a df with scientific names using the underscore (Tree_name) and the common names we want to use as labels
 treenames <- allmods_spp %>% rownames_to_column(., var="Tree_name") %>% select(Tree_name, COMMONNAME)
 
 # plot the phylogenetic tree
@@ -115,10 +115,10 @@ treeplot <- ggtree(birdtree) %<+%
 treeplot
 
 # get data for the heatmap
-# NOTE: USING THE LIGHT T-STAT FROM THE DECISION WINDOW MODEL FOR THIS PLOT FOR NOW - WE MAY WANT TO REVISIT THIS
+# NOTE: T-STATISTICS FOR LIGHT FROM BOTH MODELS SHOWN IN THIS VERSION
 heatmap_dat <- allmods_spp %>% 
   select(scaletempanom_DW_tstat, scaletempanom_LW_tstat, scaleprcp_DW_total_tstat, scaleprcp_LW_total_tstat,
-         scaleprcp_DW_cov_tstat, scaleprcp_LW_cov_tstat, scalelight_DW_tstat)
+         scaleprcp_DW_cov_tstat, scaleprcp_LW_cov_tstat, scalelight_DW_tstat, scalelight_LW_tstat)
   
 # now create heatmap to go with the tree
 # plot species effects as heatmap with phylogenetic tree on left 
@@ -130,8 +130,7 @@ treeplusheatmap <- gheatmap(
   colnames_position="top",
   font.size=3,
   hjust=0, 
-  custom_column_labels = c("Temp. Anomaly - decision", "Temp. Anomaly - long", "Precipitation - decision", "Precipitation - long",
-                           "Precipitation COV - decision", "Precipitation COV - long", "Light Pollution")) +
+  custom_column_labels = c("Temp. Anomaly - decision", "Temp. Anomaly - long", "Precipitation - decision", "Precipitation - long", "Precipitation COV - decision", "Precipitation COV - long", "Light Pollution - decision", "Light Pollution - long")) +
   scale_fill_continuous_diverging(palette = "cork", n_interp=11, mid = 0, limits=c(-3.5,3.5), name="t-statistic", rev=F,
                                   p1 = 1, p2=1)+
   vexpand(.2,1) +
@@ -199,7 +198,9 @@ ggsave(FYchangestat, filename = "Fig2_ChangeStat.png", path = here("Figures"), w
 tstats_plot <- left_join(tstats, codetospec)
 
 # make vector of species where long-term model was preferred
-longspp <- c("", "", "") ### ADD SPECIES CODES HERE!!!!
+longspp <- c("ORJU", "WIWA", "AUWA", "SWTH", "DOWO",
+"LISP", "YEWA", "HOWR", "COYE", "BEWR", "NOCA", "CARW",
+"TUTI") 
 
 # specify species where long-term window was preferred
 lw_tstats_plot <- tstats_plot %>%
@@ -216,7 +217,7 @@ for(i in unique(dw_tstats_plot$SPEC)){
   tstats_sub <- dw_tstats_plot %>%
     filter(SPEC == i)
   
-  name <- unique(tstats_sub$COMMONNAME)
+  name <- unique(tstats_sub$COMMONNAME) 
   
   # breeding phenology
   specstat <- tstats_sub %>%
