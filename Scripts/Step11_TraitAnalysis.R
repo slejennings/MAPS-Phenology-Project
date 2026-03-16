@@ -127,6 +127,7 @@ birdtree_20spp <- phydat_20spp$phy # this is our trimmed tree for the 20 species
 # NOTE: IF NOT USING WAIC, CHANGE THE NAME OF THE LAST COLUMN INSIDE MUTATE TO elpd_SE_diff
 birddat_20spp <- as.data.frame(phydat_20spp$data) %>% # convert to df
   mutate(across(c(scaletempanom_DW_tstat:waic_diff_model), as.numeric)) # make sure columns that need to be are numeric
+birddat_20spp$species2 <- rownames(birddat_20spp)
 
 #### For 18 species with eye morphometrics ####
 phydat_18spp <- geiger::treedata(tree, eye_18spp, sort=T) # join tree with data
@@ -138,6 +139,8 @@ birdtree_18spp <- phydat_18spp$phy # this is our trimmed tree for the 18 species
 birddat_18spp <- as.data.frame(phydat_18spp$data) %>% # convert to df
   mutate(across(c(scaletempanom_DW_tstat:waic_diff_model), as.numeric)) # make sure columns that need to be are numeric
 
+birddat_18spp$species2 <- rownames(birddat_18spp)
+
 ####################################################################################
 ##### Trait models with STI (species temperature index)
 ####################################################################################
@@ -147,22 +150,23 @@ colnames(birddat_20spp)
 
 ######## Temperature anomaly in decision window ##############
 
-# fixed lambda at zero because estimated outside of bounds below zero - CHECK THIS WITH NEW INPUT DATA
+# fixed lambda at zero because estimated at zero using phylolm
 temp_STI_dw <- gls(scaletempanom_DW_tstat ~ STI + Body_mass_log, 
           data = birddat_20spp, 
-          correlation = corPagel(0, phy = birdtree_20spp, fixed=T), method = "ML")
+          correlation = corPagel(0, phy = birdtree_20spp, fixed=T, form =~species2), method = "ML")
 
-# model will give warning about missing covariate. It is okay to proceed
+# no relationships
 summary(temp_STI_dw)
 check_model(temp_STI_dw)
 
 ######## Temperature anomaly in long-term window ##############
 
-# fixed lambda at zero because estimated outside of bounds below zero - CHECK THIS WITH NEW INPUT DATA
+# fixed lambda at zero because estimated at zero using phylolm
 temp_STI_lw <- gls(scaletempanom_LW_tstat ~ STI + Body_mass_log, 
                    data = birddat_20spp, 
-                   correlation = corPagel(0, phy = birdtree_20spp, fixed=T), method = "ML")
+                   correlation = corPagel(0, phy = birdtree_20spp, fixed=T, form =~species2), method = "ML")
 
+# positive relationship between STI and response
 summary(temp_STI_lw)
 check_model(temp_STI_lw)
 
@@ -175,41 +179,44 @@ colnames(birddat_20spp)
 
 ######## Total precipitation in decision window ##############
 
-# fixed lambda at zero because estimated outside of bounds below zero - CHECK THIS WITH NEW INPUT DATA
+# # fixed lambda at zero because estimated at zero using phylolm
 totalprcp_annualprcp_dw <- gls(scaleprcp_DW_total_tstat ~ AnnualPrecip_cm + Body_mass_log, 
                    data = birddat_20spp, 
-                   correlation = corPagel(0, phy = birdtree_20spp, fixed=T), method = "ML")
+                   correlation = corPagel(0, phy = birdtree_20spp, fixed=T, form =~species2), method = "ML")
 
+# no relationships
 summary(totalprcp_annualprcp_dw)
 check_model(totalprcp_annualprcp_dw)
 
 ######## Total precipitation in long-term window ##############
 
-# fixed lambda at zero because estimated outside of bounds below zero - CHECK THIS WITH NEW INPUT DATA
+# # fixed lambda at zero because estimated at zero using phylolm
 totalprcp_annualprcp_lw <- gls(scaleprcp_LW_total_tstat ~ AnnualPrecip_cm + Body_mass_log, 
                                data = birddat_20spp, 
-                               correlation = corPagel(0, phy = birdtree_20spp, fixed=T), method = "ML")
+                               correlation = corPagel(0, phy = birdtree_20spp, fixed=T, form = ~species2), method = "ML")
 
 summary(totalprcp_annualprcp_lw)
 check_model(totalprcp_annualprcp_lw)
 
 ######## Precipitation variability in decision window ##############
 
-# fixed lambda at zero because estimated outside of bounds below zero - CHECK THIS WITH NEW INPUT DATA
+# # fixed lambda at zero because estimated at zero using phylolm
 covprcp_annualprcp_dw <- gls(scaleprcp_DW_cov_tstat ~ AnnualPrecip_cm + Body_mass_log, 
                                data = birddat_20spp, 
-                               correlation = corPagel(0, phy = birdtree_20spp, fixed=T), method = "ML")
+                               correlation = corPagel(0, phy = birdtree_20spp, fixed=T, form =~species2), method = "ML")
 
+#no relationships
 summary(covprcp_annualprcp_dw)
 check_model(covprcp_annualprcp_dw)
 
 ######## Precipitation variability in long-term window ##############
 
-# fixed lambda at zero because estimated outside of bounds below zero - CHECK THIS WITH NEW INPUT DATA
+# # fixed lambda at zero because estimated at zero using phylolm
 covprcp_annualprcp_lw <- gls(scaleprcp_LW_cov_tstat ~ AnnualPrecip_cm + Body_mass_log, 
                              data = birddat_20spp, 
-                             correlation = corPagel(0, phy = birdtree_20spp, fixed=T), method = "ML")
+                             correlation = corPagel(0, phy = birdtree_20spp, fixed=T, form =~species2), method = "ML")
 
+#no relationships
 summary(covprcp_annualprcp_lw)
 check_model(covprcp_annualprcp_lw)
 
@@ -222,21 +229,23 @@ colnames(birddat_20spp)
 
 ######## Temperature anomaly in decision window ##############
 
-# fixed lambda at zero because estimated outside of bounds below zero - CHECK THIS WITH NEW INPUT DATA
+# # fixed lambda at zero because estimated at zero using phylolm
 temp_HWI_dw <- gls(scaletempanom_DW_tstat ~ HWI + Body_mass_log, 
                    data = birddat_20spp, 
-                   correlation = corPagel(0, phy = birdtree_20spp, fixed=T), method = "ML")
+                   correlation = corPagel(0, phy = birdtree_20spp, fixed=T,form =~species2), method = "ML")
 
+#no relationships
 summary(temp_HWI_dw)
 check_model(temp_HWI_dw)
 
 ######## Temperature anomaly in long-term window ##############
 
-# fixed lambda at zero because estimated outside of bounds below zero - CHECK THIS WITH NEW INPUT DATA
+# fixed lambda at zero because estimated at zero using phylolm
 temp_HWI_lw <- gls(scaletempanom_LW_tstat ~ HWI + Body_mass_log, 
                    data = birddat_20spp, 
-                   correlation = corPagel(0, phy = birdtree_20spp, fixed=T), method = "ML")
+                   correlation = corPagel(0, phy = birdtree_20spp, fixed=T, form =~species2), method = "ML")
 
+#no relationships
 summary(temp_HWI_lw)
 check_model(temp_HWI_lw)
 
@@ -244,12 +253,13 @@ check_model(temp_HWI_lw)
 
 # using the difference in SE for elpd as a weighting variable in this model
 
-# fixed lambda at zero because estimated outside of bounds below zero - CHECK THIS WITH NEW INPUT DATA
+# fixed lambda at zero because estimated at zero using phylolm
 elpddiff_HWI <- gls(elpd_diff_model ~ HWI, 
                     data = birddat_20spp, 
-                    correlation = corPagel(0, phy = birdtree_20spp, fixed=T),
+                    correlation = corPagel(0, phy = birdtree_20spp, fixed=T,form=~species2),
                     weights = varFixed(~1/sqrt(elpd_SE_diff)), method = "ML")
 
+# no relationship
 summary(elpddiff_HWI)
 check_model(elpddiff_HWI)
 
@@ -259,11 +269,12 @@ check_model(elpddiff_HWI)
 
 # no weighting variable in this model as we can't get the difference in SE of waic (see notes in Step9 script)
 
-# fixed lambda at zero because estimated outside of bounds below zero - CHECK THIS WITH NEW INPUT DATA
+# fixed lambda at zero because estimated at zero using phylolm
 waicdiff_HWI <- gls(waic_diff_model ~ HWI, 
                    data = birddat_20spp, 
-                   correlation = corPagel(0, phy = birdtree_20spp, fixed=T), method = "ML")
+                   correlation = corPagel(0, phy = birdtree_20spp, fixed=T, form =~species2), method = "ML")
 
+#no relationship
 summary(waicdiff_HWI)
 check_model(waicdiff_HWI)
 
@@ -274,24 +285,24 @@ check_model(waicdiff_HWI)
 # use birdtree_18spp as the tree and birddat_18spp for the data in these models
 colnames(birddat_18spp)
 
-# NOTE: WE NEED TO REVISIT THIS AND DECIDE WHETHER OR NOT TO RUN BOTH MODELS
 
 ######## Light pollution in decision window ##############
 
-# fixed lambda at zero because estimated outside of bounds below zero - CHECK THIS WITH NEW INPUT DATA
+# fixed lambda at zero because estimated at zero using phylolm
 light_CT_dw <- gls(scalelight_DW_tstat ~ C.T + Body_mass_log, 
                    data = birddat_18spp, 
-                   correlation = corPagel(0, phy = birdtree_18spp, fixed=T), method = "ML")
+                   correlation = corPagel(0, phy = birdtree_18spp, fixed=T, form =~species2), method = "ML")
 
+#no relationship
 summary(light_CT_dw)
 check_model(light_CT_dw)
 
 ######## Light pollution in long-term window ##############
 
-# fixed lambda at zero because estimated outside of bounds below zero - CHECK THIS WITH NEW INPUT DATA
+# fixed lambda at zero because estimated at zero using phylolm
 light_CT_lw <- gls(scalelight_LW_tstat ~ C.T + Body_mass_log, 
                    data = birddat_18spp, 
-                   correlation = corPagel(0, phy = birdtree_18spp, fixed=T), method = "ML")
+                   correlation = corPagel(0, phy = birdtree_18spp, fixed=T, form=~species2), method = "ML")
 
 summary(light_CT_lw)
 check_model(light_CT_lw)
@@ -301,14 +312,14 @@ check_model(light_CT_lw)
 ##### Fig 5: Panel of trait plots
 ####################################################################################
 
-###### Panel A: using temp_STI_dw ##########
+###### Panel A: using temp_STI_lw ##########
 
 # get effect of STI on the model statistics for change in temperature anomalies
-eff_temp_STI <- plot(ggeffects::predict_response(temp_STI_dw, terms =c("STI")), colors = "darkseagreen")
+eff_temp_STI <- plot(ggeffects::predict_response(temp_STI_lw, terms =c("STI")), colors = "darkseagreen")
 
 # add data, labels, nice formatting to plot
 Panel_A <- eff_temp_STI +
-  geom_point(data = birddat_20spp, aes(x = STI, y = scaletempanom_DW_tstat), color = "darkseagreen", size = 3.1, pch = 19)+
+  geom_point(data = birddat_20spp, aes(x = STI, y = scaletempanom_LW_tstat), color = "darkseagreen", size = 3.1, pch = 19)+
   labs(title= "", x = "Species temperature index (STI)", y = "Sensitivity to temperature anomalies")+
   theme_classic() +
   theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
@@ -319,50 +330,14 @@ Panel_A <- eff_temp_STI +
 
 Panel_A     
 
-###### Panel B: using covprcp_annualprcp_dw ##########
+###### Panel B: using C.T ##########
 
-# get effect of body mass on the model statistics for change in precipitation variability
-eff_covprcp_mass <- plot(ggeffects::predict_response(covprcp_annualprcp_dw, terms =c("Body_mass_log")), colors = "#1768B3")
-
-# add data, labels, nice formatting to plot
-Panel_B <- eff_covprcp_mass +
-  geom_point(data = birddat_20spp, aes(x = Body_mass_log, y = scaleprcp_DW_cov_tstat), color = "#1768B3", size = 3.1, pch = 19)+
-  labs(title= "", x = "Natural log of body mass (g)", y = "Sensitivity to precipitation variability")+
-  theme_classic() +
-  theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-        axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), 
-        axis.title.x = element_text(color = "black", size = 12), axis.title.y = element_text(color = "black", size = 12)) + 
-  geom_hline(yintercept=0, linetype="dashed", color = "gray", linewidth=.6)
-
-Panel_B  
-
-###### Panel C: using covprcp_annualprcp_lw ##########
-
-# get effect of body mass on the model statistics for change in precipitation variability
-eff_covprcp_annualprcp <- plot(ggeffects::predict_response(covprcp_annualprcp_lw, terms =c("AnnualPrecip_cm")), colors = "#CC2A18")
+# get effect of C.T on the model statistics for change in light pollution
+eff_light_CT <- plot(ggeffects::predict_response(light_CT_lw, terms =c("C.T")), colors = "#DEB70D")
 
 # add data, labels, nice formatting to plot
-Panel_C <- eff_covprcp_annualprcp +
-  geom_point(data = birddat_20spp, aes(x = AnnualPrecip_cm, y = scaleprcp_LW_cov_tstat), color = "#CC2A18", size = 3.1, pch = 19)+
-  labs(title= "", x = "Average Precipitation in Range (cm)", y = "Sensitivity to precipitation variability")+
-  theme_classic() +
-  theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-        axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), 
-        axis.title.x = element_text(color = "black", size = 12), axis.title.y = element_text(color = "black", size = 12)) + 
-  geom_hline(yintercept=0, linetype="dashed", color = "gray", linewidth=.6)
-
-Panel_C 
-
-###### Panel D: using covprcp_annualprcp_lw ##########
-
-# get effect of body mass on the model statistics for change in precipitation variability
-eff_light_CT <- plot(ggeffects::predict_response(light_CT_dw, terms =c("C.T")), colors = "#DEB70D")
-
-# add data, labels, nice formatting to plot
-Panel_D <- eff_light_CT +
-  geom_point(data = birddat_20spp, aes(x = C.T, y = scalelight_DW_tstat), color = "#DEB70D", size = 3.1, pch = 19)+
+Panel_B <- eff_light_CT +
+  geom_point(data = birddat_18spp, aes(x = C.T, y = scalelight_LW_tstat), color = "#DEB70D", size = 3.1, pch = 19)+
   labs(title= "", x = "Dim light vision", y = "Sensitivity to light pollution")+
   theme_classic() +
   theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
@@ -371,16 +346,16 @@ Panel_D <- eff_light_CT +
         axis.title.x = element_text(color = "black", size = 12), axis.title.y = element_text(color = "black", size = 12)) + 
   geom_hline(yintercept=0, linetype="dashed", color = "gray", linewidth=.6)
 
-Panel_D
+Panel_B
 
 # combine panels and export
-toprow <- wrap_elements((Panel_A + plot_spacer() + Panel_B) + plot_layout(widths = c(0.49, 0.01, 0.49))) # add a small space between the two plots
-bottomrow <- wrap_elements((Panel_C + plot_spacer() + Panel_D) + plot_layout(widths = c(0.49, 0.01, 0.49)))   
+toprow <- (Panel_A + plot_spacer() + Panel_B) + plot_layout(widths = c(0.49, 0.01, 0.49)) # add a small space between the two plots
 
-panelplot <- toprow/bottomrow +
+
+panelplot <- toprow +
              plot_annotation(tag_levels = 'a') & theme(plot.tag = element_text(size = 14, face ="bold"))
 
-ggsave(panelplot, filename = "Fig5_TraitPanel.pdf", path = here("Figures"), width=20, height=20, units = "cm")
+ggsave(panelplot, filename = "Fig5_TraitPanel.pdf", path = here("Figures"), width=20, height=10, units = "cm")
 
 ####################################################################################
 ##### Fig 4: Model fit and dispersal ability (HWI)
@@ -527,7 +502,7 @@ trait_results <- bind_rows(temp_STI_dw_tidy, temp_STI_lw_tidy, totalprcp_annualp
                            elpddiff_HWI_tidy, waicdiff_HWI_tidy, light_CT_dw_tidy, light_CT_lw_tidy) %>%
   select(trait, response_variable, window, sample_size, term:conf.high, lambda)
 
-write.csv(traitmodels_results, here("Models/Model Outputs", "traitmodels.csv"))
+write.csv(trait_results, here("Models/Model Outputs", "traitmodels.csv"))
 
 
 

@@ -16,6 +16,7 @@ library(ggeffects)
 library(nlme)
 library(performance)
 library(broom.mixed)
+library(patchwork)
 
 # import files
 
@@ -78,7 +79,7 @@ STI_dw_plot <- eff_STI_dw +
   theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
         axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), 
-        axis.title.x = element_text(color = "black", size = 12), axis.title.y = element_text(color = "black", size = 12)) 
+        axis.title.x = element_text(color = "black", size = 12), axis.title.y = element_text(color = "black", size = 12)) +geom_hline(yintercept=0, linetype="dashed", color = "gray", linewidth=.6)
   
 
 STI_dw_plot
@@ -97,7 +98,7 @@ STI_lw_plot <- eff_STI_lw +
   theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
         axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), 
-        axis.title.x = element_text(color = "black", size = 12), axis.title.y = element_text(color = "black", size = 12)) 
+        axis.title.x = element_text(color = "black", size = 12), axis.title.y = element_text(color = "black", size = 12)) +geom_hline(yintercept=0, linetype="dashed", color = "gray", linewidth=.6)
 
 
 STI_lw_plot
