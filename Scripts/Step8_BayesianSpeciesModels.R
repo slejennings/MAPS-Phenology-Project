@@ -1,5 +1,5 @@
 ###### MAPS Phenology #######
-### Script name: Step8A_BayesianSpeciesModels.R
+### Script name: Step8_BayesianSpeciesModels.R
 ## Author(s): LP, CDF, SLJ
 
 ########## Objective/Description of Script #####################
@@ -61,7 +61,7 @@ sample_check <- sppmodels_dat %>%
 # examine default priors
 get_prior(data = sppmodels_dat, 
           family = gaussian(),
-          bf(FY_tstat ~ scale(tempanom_DW_tstat) + scale(prcp_DW_total_tstat) + 
+          brms::bf(FY_tstat ~ scale(tempanom_DW_tstat) + scale(prcp_DW_total_tstat) + 
                scale(prcp_DW_cov_tstat) + scale(light_tstat) + gp(LongR, LatR)))
 
 

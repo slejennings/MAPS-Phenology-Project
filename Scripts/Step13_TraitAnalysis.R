@@ -1,10 +1,11 @@
 ###### MAPS Phenology #######
-### Script name: Step11_TraitAnalyses.R
+### Script name: Step13_TraitAnalyses.R
 ## Author(s): LP, CDF, SLJ
 
 ########## Objective/Description of Script #####################
-# this script compares the long-term and decision window model for each species using the loo package
-# we do this using two model comparison metrics: ELPD and waic
+# run trait-based phylogenetic models
+# create Figure 4
+# export model outputs
 #################################################################
 
 #### Setup ####
@@ -36,15 +37,6 @@ STI <- read.csv(here("Data", "species_STI.csv"), header=T)
 
 # hand wing index (HWI), body mass, annual precip in range
 traits <- read.csv(here("Data", "species_traits.csv"), header=T)
-
-# preferred model (decision vs long-term) using ELPD
-elpd <- readRDS(here("Outputs", "elpd_SE.rds")) %>% 
-  select(SPEC, elpd_diff_model, SE_diff) %>%
-  rename(elpd_SE_diff = SE_diff)
-
-# preferred model (decision vs long-term) using WAIC # POSSIBLY DELETE THIS
-waic <- readRDS(here("Outputs", "waic_SE.rds")) %>% 
-  select(SPEC, waic_diff_model)
 
 # phylogenetic tree for birds
 tree <- read.tree(here("Data", "Jetz_ConsensusPhy.tre"))
@@ -114,7 +106,6 @@ eye_18spp <- all_models_traits %>%
   mutate(Species = str_replace(Tree_name, "_", " ")) %>%
   column_to_rownames(., var = "Tree_name")
 
-
 ################################################################################
 #### Pair data with phylogenetic tree
 
@@ -124,9 +115,8 @@ phydat_20spp <- geiger::treedata(tree, traits_20spp, sort=T) # join tree with da
 birdtree_20spp <- phydat_20spp$phy # this is our trimmed tree for the 20 species
 
 # these are the data associated with our trimmed tree
-# NOTE: IF NOT USING WAIC, CHANGE THE NAME OF THE LAST COLUMN INSIDE MUTATE TO elpd_SE_diff
 birddat_20spp <- as.data.frame(phydat_20spp$data) %>% # convert to df
-  mutate(across(c(scaletempanom_DW_tstat:waic_diff_model), as.numeric)) # make sure columns that need to be are numeric
+  mutate(across(c(scaletempanom_DW_tstat:AnnualPrecip_cm), as.numeric)) # make sure columns that need to be are numeric
 birddat_20spp$species2 <- rownames(birddat_20spp)
 
 #### For 18 species with eye morphometrics ####
@@ -135,9 +125,8 @@ phydat_18spp <- geiger::treedata(tree, eye_18spp, sort=T) # join tree with data
 birdtree_18spp <- phydat_18spp$phy # this is our trimmed tree for the 18 species
 
 # these are the data associated with our trimmed tree
-# NOTE: IF NOT USING WAIC, CHANGE THE NAME OF THE LAST COLUMN INSIDE MUTATE TO elpd_SE_diff
 birddat_18spp <- as.data.frame(phydat_18spp$data) %>% # convert to df
-  mutate(across(c(scaletempanom_DW_tstat:waic_diff_model), as.numeric)) # make sure columns that need to be are numeric
+  mutate(across(c(scaletempanom_DW_tstat:AnnualPrecip_cm), as.numeric)) # make sure columns that need to be are numeric
 
 birddat_18spp$species2 <- rownames(birddat_18spp)
 

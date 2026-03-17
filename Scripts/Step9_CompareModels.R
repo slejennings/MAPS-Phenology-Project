@@ -1,9 +1,12 @@
+###### MAPS Phenology #######
+### Script name: Step9_CompareModels.R
+## Author(s): SLJ
 
 ########## Objective/Description of Script #####################
 # Compare species models with exact GP, approximate GP and no GP
 # Do comparisons within decision window and long-term window models
 # Use loo package and elpd for model comparison
-
+#################################################################
 
 #### Setup ####
 # load packages

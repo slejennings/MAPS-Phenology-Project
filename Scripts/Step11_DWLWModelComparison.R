@@ -1,5 +1,5 @@
 ###### MAPS Phenology #######
-### Script name: Step9_DWLWModelComparison.R
+### Script name: Step11_DWLWModelComparison.R
 ## Author(s): SLJ
 
 ########## Objective/Description of Script #####################

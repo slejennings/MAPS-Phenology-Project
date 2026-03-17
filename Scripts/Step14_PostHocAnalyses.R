@@ -1,10 +1,11 @@
 ###### MAPS Phenology #######
-### Script name: Step12_PosthocAnalyses.R
+### Script name: Step14_PosthocAnalyses.R
 ## Author(s): CDF, SLJ
 
 ########## Objective/Description of Script #####################
 # run posthoc analysis to compare mean change in temperature experienced by each species with their STI
 # we examine this relationship using change in temp for both the decision and long-term window
+# create Figure 5
 #################################################################
 
 #### Setup ####

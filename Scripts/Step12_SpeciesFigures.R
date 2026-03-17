@@ -1,5 +1,5 @@
 ###### MAPS Phenology #######
-### Script name: Step10_SpeciesFigures.R
+### Script name: Step12_SpeciesFigures.R
 ## Author(s): CDF, LP, SLJ
 
 ########## Objective/Description of Script #####################
