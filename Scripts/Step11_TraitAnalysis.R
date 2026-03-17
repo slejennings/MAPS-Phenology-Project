@@ -355,31 +355,7 @@ toprow <- (Panel_A + plot_spacer() + Panel_B) + plot_layout(widths = c(0.49, 0.0
 panelplot <- toprow +
              plot_annotation(tag_levels = 'a') & theme(plot.tag = element_text(size = 14, face ="bold"))
 
-ggsave(panelplot, filename = "Fig5_TraitPanel.pdf", path = here("Figures"), width=20, height=10, units = "cm")
-
-####################################################################################
-##### Fig 4: Model fit and dispersal ability (HWI)
-####################################################################################
-
-# get effect of HWI on the model fit (elpd)
-eff_elpddiff_HWI <- plot(ggeffects::predict_response(elpddiff_HWI, terms =c("HWI")), colors = "#0B67A1")
-
-# make plot with errorbars
-Fig4 <- eff_elpddiff_HWI +
-  geom_point(data = birddat_20spp, aes(x = HWI, y = elpd_diff_model), color = "#0B67A1", size = 3.1, pch = 19) +
-  geom_errorbar(aes(ymin = (elpd_diff_model-SE_diff), ymax = (elpd_diff_model+SE_diff), x=STI),
-                color="#0B67A1", data = combDAT,inherit.aes = FALSE, lwd=.9) +
-  labs(title= "", x = "Hand-wing index", y = "Model strength")+
-  theme_classic() +
-  theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-        axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), 
-        axis.title.x = element_text(color = "black", size = 12), axis.title.y = element_text(color = "black", size = 12)) + 
-  geom_hline(yintercept=0, linetype="dashed", color = "gray", linewidth=.6)
-
-# save plot
-ggsave(HWI2, filename = "Fig4_HWI.pdf", path = here("Figures"), width=20, height=12, units = "cm")
-ggsave(HWI2, filename = "Fig4_HWI.jpg", path = here("Figures"), width=20, height=12, units = "cm")
+ggsave(panelplot, filename = "Fig4_TraitPanel.pdf", path = here("Figures"), width=20, height=10, units = "cm")
 
 
 ####################################################################################
@@ -460,23 +436,6 @@ temp_HWI_lw_tidy <- tidy(temp_HWI_lw, conf.int = T, conf.level = 0.95) %>%
   select(-p.value) %>%
   mutate_if(is.numeric, round, 3)
 
-elpddiff_HWI_tidy <- tidy(elpddiff_HWI, conf.int = T, conf.level = 0.95) %>%
-  mutate(trait = "HWI",
-         response_variable = "model preference (elpd)",
-         window = "NA",
-         sample_size = elpddiff_HWI$dims$N,
-         lambda = 0) %>% # if lambda was fixed in the model, need to manually enter it here
-  select(-p.value) %>%
-  mutate_if(is.numeric, round, 3)
-
-waicdiff_HWI_tidy <- tidy(waicdiff_HWI, conf.int = T, conf.level = 0.95) %>%
-  mutate(trait = "HWI",
-         response_variable = "model preference (waic)",
-         window = "NA",
-         sample_size = waicdiff_HWI$dims$N,
-         lambda = 0) %>% # if lambda was fixed in the model, need to manually enter it here
-  select(-p.value) %>%
-  mutate_if(is.numeric, round, 3)
 
 light_CT_dw_tidy <- tidy(light_CT_dw, conf.int = T, conf.level = 0.95) %>%
   mutate(trait = "C.T",
@@ -498,8 +457,7 @@ light_CT_lw_tidy <- tidy(light_CT_lw, conf.int = T, conf.level = 0.95) %>%
 
 # combine into one single table of results to export
 trait_results <- bind_rows(temp_STI_dw_tidy, temp_STI_lw_tidy, totalprcp_annualprcp_dw_tidy, totalprcp_annualprcp_lw_tidy, 
-                           covprcp_annualprcp_dw_tidy, covprcp_annualprcp_lw_tidy, temp_HWI_dw_tidy, temp_HWI_lw_tidy, 
-                           elpddiff_HWI_tidy, waicdiff_HWI_tidy, light_CT_dw_tidy, light_CT_lw_tidy) %>%
+                           covprcp_annualprcp_dw_tidy, covprcp_annualprcp_lw_tidy, temp_HWI_dw_tidy, temp_HWI_lw_tidy, light_CT_dw_tidy, light_CT_lw_tidy) %>%
   select(trait, response_variable, window, sample_size, term:conf.high, lambda)
 
 write.csv(trait_results, here("Models/Model Outputs", "traitmodels.csv"))

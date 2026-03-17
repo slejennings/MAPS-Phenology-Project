@@ -106,4 +106,4 @@ STI_lw_plot
 posthoc_plot <- (STI_dw_plot + plot_spacer() + STI_lw_plot) + plot_layout(widths = c(0.49, 0.01, 0.49)) + # add a small space between the two plots
   plot_annotation(tag_levels = 'a') & theme(plot.tag = element_text(size = 14, face ="bold"))
 
-ggsave(posthoc_plot, filename = "Fig6_PosthocPlot.pdf", path = here("Figures"), width=20, height=10, units = "cm")
+ggsave(posthoc_plot, filename = "Fig5_PosthocPlot.pdf", path = here("Figures"), width=20, height=10, units = "cm")
