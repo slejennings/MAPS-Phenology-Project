@@ -249,34 +249,7 @@ temp_HWI_lw <- gls(scaletempanom_LW_tstat ~ HWI + Body_mass_log,
 summary(temp_HWI_lw)
 check_model(temp_HWI_lw)
 
-######## Preferred model (decision vs long-term) using ELPD ##############
 
-# using the difference in SE for elpd as a weighting variable in this model
-
-# fixed lambda at zero because estimated at zero using phylolm
-elpddiff_HWI <- gls(elpd_diff_model ~ HWI, 
-                    data = birddat_20spp, 
-                    correlation = corPagel(0, phy = birdtree_20spp, fixed=T,form=~species2),
-                    weights = varFixed(~1/sqrt(elpd_SE_diff)), method = "ML")
-
-# no relationship
-summary(elpddiff_HWI)
-check_model(elpddiff_HWI)
-
-######## Preferred model (decision vs long-term) using WAIC ##############
-
-######## POSSIBLY DELETE THIS AND ONLY USE ELPD MODEL
-
-# no weighting variable in this model as we can't get the difference in SE of waic (see notes in Step9 script)
-
-# fixed lambda at zero because estimated at zero using phylolm
-waicdiff_HWI <- gls(waic_diff_model ~ HWI, 
-                   data = birddat_20spp, 
-                   correlation = corPagel(0, phy = birdtree_20spp, fixed=T, form =~species2), method = "ML")
-
-#no relationship
-summary(waicdiff_HWI)
-check_model(waicdiff_HWI)
 
 ####################################################################################
 ##### Trait models with C.T (eye morphology)
