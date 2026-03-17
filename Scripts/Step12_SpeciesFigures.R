@@ -131,7 +131,7 @@ treeplusheatmap <- gheatmap(
   font.size=3,
   hjust=0, 
   custom_column_labels = c("Temp. Anomaly - decision", "Temp. Anomaly - long", "Precipitation - decision", "Precipitation - long", "Precipitation COV - decision", "Precipitation COV - long", "Light Pollution - decision", "Light Pollution - long")) +
-  scale_fill_continuous_diverging(palette = "cork", n_interp=11, mid = 0, limits=c(-3.5,3.5), name="t-statistic", rev=F,
+  scale_fill_continuous_diverging(palette = "cork", n_interp=11, mid = 0, limits=c(-4.25,4.25), name="t-statistic", rev=F,
                                   p1 = 1, p2=1)+
   vexpand(.2,1) +
   theme(axis.title.x = element_text(size = 8, face = "bold"),
