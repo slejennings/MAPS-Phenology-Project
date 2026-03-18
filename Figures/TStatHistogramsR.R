@@ -13,15 +13,19 @@ library(colorspace)
 # t-statistics for change in bird breeding phenology and environmental variables
 tstats <- readRDS(here("Outputs", "combined_t_stats.rds"))
 
+# set up divergent palette
+colorspace::diverging_hcl(n = 13, h = c(245, 125), c = c(30, 55), l = c(15, 95), power = c(0.75, 0.85), 
+                          register = "custom_bluegreen" )
+swatchplot(custom = diverging_hcl(n = 13, "custom_bluegreen" )) # examine palette
+
 ##### Change in Breeding Phenology
 
-min(tstats$FY_tstat)
-max(tstats$FY_tstat)
+range(tstats$FY_tstat) # use range to set limits for color palette
 
 FYchangestat <- tstats %>%
   ggplot(aes(x = FY_tstat)) + 
   geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-  scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-6,6), name="t-statistic", rev=F) + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-5,5), name="t-statistic", rev=F) + 
   geom_vline(aes(xintercept = -1.44), 
              color = "#ABABAB", 
              linetype = "dashed", 
@@ -60,13 +64,12 @@ FYchangestat
 
 ##### Change in Temp Anomalies - DW
 
-min(tstats$tempanom_DW_tstat)
-max(tstats$tempanom_DW_tstat)
+range(tstats$tempanom_DW_tstat) # use range to set limits for color palette
 
 TAchangestat_dw <- tstats %>%
   ggplot(aes(x = tempanom_DW_tstat)) + 
   geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-  scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-6,6), name="t-statistic", rev=F) + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-5.5,5.5), name="t-statistic", rev=F) + 
   geom_vline(aes(xintercept = -1.44), 
              color = "#ABABAB", 
              linetype = "dashed", 
@@ -103,13 +106,12 @@ TAchangestat_dw
 
 ##### Change in Temp Anomalies - LW
 
-min(tstats$tempanom_LW_tstat)
-max(tstats$tempanom_LW_tstat)
+range(tstats$tempanom_LW_tstat) # use range to set limits for color palette
 
 TAchangestat_lw <- tstats %>%
   ggplot(aes(x = tempanom_LW_tstat)) + 
   geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-  scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-6,8), name="t-statistic", rev=F) + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
   geom_vline(aes(xintercept = -1.44), 
              color = "#ABABAB", 
              linetype = "dashed", 
@@ -146,13 +148,12 @@ TAchangestat_lw
 
 ##### Change in Total Precipitation - DW
 
-min(tstats$prcp_DW_total_tstat)
-max(tstats$prcp_DW_total_tstat)
+range(tstats$prcp_DW_total_tstat) # use range to set limits for color palette
 
 TPchangestat_dw <- tstats %>%
   ggplot(aes(x = prcp_DW_total_tstat)) + 
   geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-  scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-6,6), name="t-statistic", rev=F) + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-6,6), name="t-statistic", rev=F) + 
   geom_vline(aes(xintercept = -1.44), 
              color = "#ABABAB", 
              linetype = "dashed", 
@@ -189,13 +190,12 @@ TPchangestat_dw
 
 ##### Change in Total Precipitation - LW
 
-min(tstats$prcp_LW_total_tstat)
-max(tstats$prcp_LW_total_tstat)
+range(tstats$prcp_LW_total_tstat) # use range to set limits for color palette
 
 TPchangestat_lw <- tstats %>%
   ggplot(aes(x = prcp_LW_total_tstat)) + 
   geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-  scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-6,6), name="t-statistic", rev=F) + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-5,5), name="t-statistic", rev=F) + 
   geom_vline(aes(xintercept = -1.44), 
              color = "#ABABAB", 
              linetype = "dashed", 
@@ -233,14 +233,13 @@ TPchangestat_lw
 
 ##### Change in Precipitation Variability - DW
 
-min(tstats$prcp_DW_cov_tstat)
-max(tstats$prcp_DW_cov_tstat)
+range(tstats$prcp_DW_cov_tstat) # use range to set limits for color palette
 
 
 PVchangestat_dw <- tstats %>%
   ggplot(aes(x = prcp_DW_cov_tstat)) + 
   geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-  scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-6,6), name="t-statistic", rev=F) + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-6,6), name="t-statistic", rev=F) + 
   geom_vline(aes(xintercept = -1.44), 
              color = "#ABABAB", 
              linetype = "dashed", 
@@ -277,13 +276,12 @@ PVchangestat_dw
 
 ##### Change in Precipitation Variability - LW
 
-min(tstats$prcp_LW_cov_tstat)
-max(tstats$prcp_LW_cov_tstat)
+range(tstats$prcp_LW_cov_tstat) # use range to set limits for color palette
 
 PVchangestat_lw <- tstats %>%
   ggplot(aes(x = prcp_LW_cov_tstat)) + 
   geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-  scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
   geom_vline(aes(xintercept = -1.44), 
              color = "#ABABAB", 
              linetype = "dashed", 
@@ -321,13 +319,12 @@ PVchangestat_lw
 
 ##### Change in Light
 
-min(tstats$light_tstat)
-max(tstats$light_tstat)
+range(tstats$light_tstat) # use range to set limits for color palette
 
 NLchangestat <- tstats %>%
   ggplot(aes(x = light_tstat)) + 
   geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-  scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-18,18), name="t-statistic", rev=F) + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-18,14), name="t-statistic", rev=F) + 
   geom_vline(aes(xintercept = -1.44), 
              color = "#ABABAB", 
              linetype = "dashed", 

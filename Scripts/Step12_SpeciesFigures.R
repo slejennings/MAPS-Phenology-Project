@@ -122,7 +122,12 @@ heatmap_dat <- allmods_spp %>%
   
 # now create heatmap to go with the tree
 # plot species effects as heatmap with phylogenetic tree on left 
-# NOTE: MAY NEED TO ADJUST THE LIMITS OF THE DIVERGING PALETTE IF T-STATS EXCEED -3.5 OR 3.5
+
+# set up divergent palette
+colorspace::diverging_hcl(n = 13, h = c(245, 125), c = c(30, 55), l = c(15, 95), power = c(0.75, 0.85), 
+                          register = "custom_bluegreen" )
+swatchplot(custom = diverging_hcl(n = 13, "custom_bluegreen" )) # examine palette
+
 treeplusheatmap <- gheatmap(
   treeplot, heatmap_dat, offset=50, width=1.2,
   colnames_angle = 75, 
@@ -131,8 +136,7 @@ treeplusheatmap <- gheatmap(
   font.size=3,
   hjust=0, 
   custom_column_labels = c("Temp. Anomaly - decision", "Temp. Anomaly - long", "Precipitation - decision", "Precipitation - long", "Precipitation COV - decision", "Precipitation COV - long", "Light Pollution - decision", "Light Pollution - long")) +
-  scale_fill_continuous_diverging(palette = "cork", n_interp=11, mid = 0, limits=c(-4.25,4.25), name="t-statistic", rev=F,
-                                  p1 = 1, p2=1)+
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", n_interp=13, mid = 0, limits=c(-4.25,4.25), name="t-statistic", rev=F)+
   vexpand(.2,1) +
   theme(axis.title.x = element_text(size = 8, face = "bold"),
         legend.title = element_text(size= 8),
@@ -149,10 +153,12 @@ ggsave(treeplusheatmap, filename = "Fig3_TreePlusHeatMap.png", path = here("Figu
 ######### Figure 2: Histogram of Change in Bird Breeding Phenology
 ########################################################################################################
 
+range(tstats$FY_tstat)
+
 FYchangestat <- tstats %>%
   ggplot(aes(x = FY_tstat)) + 
   geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-  scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-5,5), name="t-statistic", rev=F) + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-5,5), name="t-statistic", rev=F) + 
   geom_vline(aes(xintercept = -1.44), 
              color = "#ABABAB", 
              linetype = "dashed", 
@@ -223,7 +229,7 @@ for(i in unique(dw_tstats_plot$SPEC)){
   specstat <- tstats_sub %>%
     ggplot(aes(x = FY_tstat)) + 
     geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-    scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-5,5), name="t-statistic", rev=F) + 
+    scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-5,5), name="t-statistic", rev=F) + 
     geom_vline(aes(xintercept = 0), 
                color = "#ABABAB", 
                linetype = "dashed", 
@@ -241,7 +247,7 @@ for(i in unique(dw_tstats_plot$SPEC)){
   anomstat <- tstats_sub %>%
     ggplot(aes(x = tempanom_DW_tstat)) + 
     geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-    scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
+    scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
     geom_vline(aes(xintercept = 0), 
                color = "#ABABAB", 
                linetype = "dashed", 
@@ -259,7 +265,7 @@ for(i in unique(dw_tstats_plot$SPEC)){
   prcpsumstat <- tstats_sub %>%
     ggplot(aes(x = prcp_DW_total_tstat)) + 
     geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-    scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
+    scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
     geom_vline(aes(xintercept = 0), 
                color = "#ABABAB", 
                linetype = "dashed", 
@@ -277,7 +283,7 @@ for(i in unique(dw_tstats_plot$SPEC)){
   prcpcovstat <- tstats_sub %>%
     ggplot(aes(x = prcp_DW_cov_tstat)) + 
     geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-    scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
+    scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
     geom_vline(aes(xintercept = 0), 
                color = "#ABABAB", 
                linetype = "dashed", 
@@ -295,7 +301,7 @@ for(i in unique(dw_tstats_plot$SPEC)){
   lightstat <- tstats_sub %>%
     ggplot(aes(x = light_tstat)) + 
     geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-    scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-10,10), name="t-statistic", rev=F) + 
+    scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-10,10), name="t-statistic", rev=F) + 
     geom_vline(aes(xintercept = 0), 
                color = "#ABABAB", 
                linetype = "dashed", 
@@ -339,7 +345,7 @@ for(i in unique(lw_tstats_plot$SPEC)){
   specstat <- tstats_sub %>%
     ggplot(aes(x = FY_tstat)) + 
     geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-    scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-5,5), name="t-statistic", rev=F) + 
+    scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-5,5), name="t-statistic", rev=F) + 
     geom_vline(aes(xintercept = 0), 
                color = "#ABABAB", 
                linetype = "dashed", 
@@ -357,7 +363,7 @@ for(i in unique(lw_tstats_plot$SPEC)){
   anomstat <- tstats_sub %>%
     ggplot(aes(x = tempanom_LW_tstat)) + 
     geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-    scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
+    scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
     geom_vline(aes(xintercept = 0), 
                color = "#ABABAB", 
                linetype = "dashed", 
@@ -375,7 +381,7 @@ for(i in unique(lw_tstats_plot$SPEC)){
   prcpsumstat <- tstats_sub %>%
     ggplot(aes(x = prcp_LW_total_tstat)) + 
     geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-    scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
+    scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
     geom_vline(aes(xintercept = 0), 
                color = "#ABABAB", 
                linetype = "dashed", 
@@ -393,7 +399,7 @@ for(i in unique(lw_tstats_plot$SPEC)){
   prcpcovstat <- tstats_sub %>%
     ggplot(aes(x = prcp_LW_cov_tstat)) + 
     geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-    scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
+    scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-8,8), name="t-statistic", rev=F) + 
     geom_vline(aes(xintercept = 0), 
                color = "#ABABAB", 
                linetype = "dashed", 
@@ -411,7 +417,7 @@ for(i in unique(lw_tstats_plot$SPEC)){
   lightstat <- tstats_sub %>%
     ggplot(aes(x = light_tstat)) + 
     geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
-    scale_fill_continuous_diverging(palette = "cork", mid = 0, limits=c(-10,10), name="t-statistic", rev=F) + 
+    scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-10,10), name="t-statistic", rev=F) + 
     geom_vline(aes(xintercept = 0), 
                color = "#ABABAB", 
                linetype = "dashed", 
