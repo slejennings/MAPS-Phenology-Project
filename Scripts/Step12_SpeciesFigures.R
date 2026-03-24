@@ -7,6 +7,7 @@
 # Fig 3: heatmap depicting the results of the species' models from Step8_BayesianSpeciesModels
 # Fig 2: a histogram showing changes in breeding phenology across all species and stations
 # supplementary figures showing change in breeding phenology, change in light, change in climate for each species
+# supplementary figure (Fig S1) showing average change in breeding phenology, light, and climate with all species/populations pooled
 #################################################################
 
 #### Setup ####
@@ -145,7 +146,7 @@ treeplusheatmap <- gheatmap(
 treeplusheatmap
 
 # save
-ggsave(treeplusheatmap, filename = "Fig3_TreePlusHeatMap.pdf", path = here("Figures"), width=20, height=20, units = "cm")
+ggsave(treeplusheatmap, filename = "Fig3_TreePlusHeatMap.pdf", path = here("Figures"), width=20, height=20, units = "cm", device=cairo_pdf)
 ggsave(treeplusheatmap, filename = "Fig3_TreePlusHeatMap.png", path = here("Figures"), width=20, height=20, units = "cm")
 
 
@@ -193,7 +194,7 @@ FYchangestat <- tstats %>%
 
 FYchangestat
 
-ggsave(FYchangestat, filename = "Fig2_ChangeStat.pdf", path = here("Figures"), width=20, height=12, units = "cm")
+ggsave(FYchangestat, filename = "Fig2_ChangeStat.pdf", path = here("Figures"), width=20, height=12, units = "cm", device=cairo_pdf)
 ggsave(FYchangestat, filename = "Fig2_ChangeStat.png", path = here("Figures"), width=20, height=12, units = "cm")
 
 
@@ -446,3 +447,378 @@ for(i in unique(lw_tstats_plot$SPEC)){
   ggsave(sppplot, filename = paste(i, "lw_changestat.png", sep = "_"), path = here("Figures/Spp change stats/Long window"), width=23, height=16, units = "cm")
   
 }
+
+#########################################################################################################
+##### Supplementary figures: Figure S1
+########################################################################################################
+
+# this figure shows the change in breeding phenology, change in light pollution, and change in climate variables with all species and populations pooled
+
+# set up divergent palette
+colorspace::diverging_hcl(n = 13, h = c(245, 125), c = c(30, 55), l = c(15, 95), power = c(0.75, 0.85), 
+                          register = "custom_bluegreen" )
+swatchplot(custom = diverging_hcl(n = 13, "custom_bluegreen" )) # examine palette
+
+##### Change in Breeding Phenology
+
+range(tstats$FY_tstat) # use range to set limits for color palette
+
+FYchangestat <- tstats %>%
+  ggplot(aes(x = FY_tstat)) + 
+  geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-5,5), name="t-statistic", rev=F, breaks=c(-4,-2,0,2,4)) + 
+  geom_vline(aes(xintercept = -1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = - 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  labs(x = "Change in breeding phenology", 
+       y = "Number of models",
+       title = "Bird Breeding Phenology") +
+  coord_cartesian(xlim=c(-6,6)) +
+  theme_classic() +
+  theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 12),
+        legend.title = element_text(size= 9),
+        legend.text = element_text(size= 9)) +
+  annotate("segment", x=3, y=50, xend=5, yend=50, # add arrows at top of plot
+           col="#002F00", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("segment", x=-3, y=50, xend=-5, yend= 50,
+           col="#00294D", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("text", x = 4, y=60, label = "Delaying", color =  "#002F00", size=4) + # add text annotations above arrows
+  annotate("text", x = -4, y=60, label = "Advancing", color = "#00294D", size=4) +
+  theme(legend.key.size = unit(.4, 'cm'))
+
+
+FYchangestat
+
+
+##### Change in Temp Anomalies - DW
+
+range(tstats$tempanom_DW_tstat) # use range to set limits for color palette
+
+TAchangestat_dw <- tstats %>%
+  ggplot(aes(x = tempanom_DW_tstat)) + 
+  geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-6,6), name="t-statistic", rev=F, breaks=c(-6,-3,0,3,6)) + 
+  geom_vline(aes(xintercept = -1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = - 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  labs(x = "Change in temperature anomalies", 
+       y = "Number of models",
+       title = "Temperature Anomaly: Decision Window") +
+  coord_cartesian(xlim=c(-6,6)) +
+  theme_classic() +
+  theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 12),
+        legend.title = element_text(size= 9),
+        legend.text = element_text(size= 9)) +
+  annotate("segment", x=3, y=50, xend=5, yend=50, # add arrows at top of plot
+           col="#002F00", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("segment", x=-3, y=50, xend=-5, yend= 50,
+           col="#00294D", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("text", x = 4, y=60, label = "Warming", color =  "#002F00", size=4) + # add text annotations above arrows
+  annotate("text", x = -4, y=60, label = "Cooling", color = "#00294D", size=4) +
+  theme(legend.key.size = unit(.4, 'cm'))
+
+TAchangestat_dw
+
+##### Change in Temp Anomalies - LW
+
+range(tstats$tempanom_LW_tstat) # use range to set limits for color palette
+
+TAchangestat_lw <- tstats %>%
+  ggplot(aes(x = tempanom_LW_tstat)) + 
+  geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-8,8), name="t-statistic", rev=F, breaks=c(-8,-4,0,4,8)) + 
+  geom_vline(aes(xintercept = -1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = - 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  labs(x = "Change in temperature anomalies", 
+       y = "Number of models",
+       title = "Temperature Anomaly: Long-term Window") +
+  coord_cartesian(xlim=c(-6,8)) +
+  theme_classic() +
+  theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 12),
+        legend.title = element_text(size= 9),
+        legend.text = element_text(size= 9)) +
+  annotate("segment", x=3, y=50, xend=5, yend=50, # add arrows at top of plot
+           col="#002F00", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("segment", x=-3, y=50, xend=-5, yend= 50,
+           col="#00294D", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("text", x = 4, y=60, label = "Warming", color =  "#002F00", size=4) + # add text annotations above arrows
+  annotate("text", x = -4, y=60, label = "Cooling", color = "#00294D", size=4) +
+  theme(legend.key.size = unit(.4, 'cm'))
+
+TAchangestat_lw
+
+##### Change in Cumulative (total) Precipitation - DW
+
+range(tstats$prcp_DW_total_tstat) # use range to set limits for color palette
+
+TPchangestat_dw <- tstats %>%
+  ggplot(aes(x = prcp_DW_total_tstat)) + 
+  geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-6,6), name="t-statistic", rev=F, breaks=c(-6,-3,0,3,6)) + 
+  geom_vline(aes(xintercept = -1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = - 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  labs(x = "Change in cumulative precipitation", 
+       y = "Number of models",
+       title = "Cumulative Precipitation: Decision Window") +
+  coord_cartesian(xlim=c(-6,6)) +
+  theme_classic() +
+  theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 12),
+        legend.title = element_text(size= 9),
+        legend.text = element_text(size= 9)) +
+  annotate("segment", x=3, y=50, xend=5, yend=50, # add arrows at top of plot
+           col="#002F00", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("segment", x=-3, y=50, xend=-5, yend= 50,
+           col="#00294D", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("text", x = 4, y=60, label = "Wetter", color =  "#002F00", size=4) + # add text annotations above arrows
+  annotate("text", x = -4, y=60, label = "Drier", color = "#00294D", size=4) +
+  theme(legend.key.size = unit(.4, 'cm'))
+
+TPchangestat_dw
+
+##### Change in Cumulative (total) Precipitation - LW
+
+range(tstats$prcp_LW_total_tstat) # use range to set limits for color palette
+
+TPchangestat_lw <- tstats %>%
+  ggplot(aes(x = prcp_LW_total_tstat)) + 
+  geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-5,5), name="t-statistic", rev=F, breaks=c(-4,-2,0,2,4)) + 
+  geom_vline(aes(xintercept = -1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = - 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  labs(x = "Change in cumulative precipitation", 
+       y = "Number of models",
+       title = "Cumulative Precipitation: Long-term Window") +
+  coord_cartesian(xlim=c(-6,6)) +
+  theme_classic() +
+  theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 12),
+        legend.title = element_text(size= 9),
+        legend.text = element_text(size= 9)) +
+  annotate("segment", x=3, y=60, xend=5, yend=60, # add arrows at top of plot
+           col="#002F00", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("segment", x=-3, y=60, xend=-5, yend= 60,
+           col="#00294D", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("text", x = 4, y=72, label = "Wetter", color =  "#002F00", size=4) + # add text annotations above arrows
+  annotate("text", x = -4, y=72, label = "Drier", color = "#00294D", size=4) +
+  theme(legend.key.size = unit(.4, 'cm'))
+
+TPchangestat_lw
+
+
+##### Change in Precipitation Variability - DW
+
+range(tstats$prcp_DW_cov_tstat) # use range to set limits for color palette
+
+
+PVchangestat_dw <- tstats %>%
+  ggplot(aes(x = prcp_DW_cov_tstat)) + 
+  geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-6,6), name="t-statistic", rev=F, breaks=c(-6,-3,0,3,6)) + 
+  geom_vline(aes(xintercept = -1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = - 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  labs(x = "Change in coefficient of variation \n for precipitation", 
+       y = "Number of models",
+       title = "Precipitation Variability: Decision Window") +
+  coord_cartesian(xlim=c(-6,6), , ylim=c(0,85)) +
+  theme_classic() +
+  theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 12),
+        legend.title = element_text(size= 9),
+        legend.text = element_text(size= 9)) +
+  annotate("segment", x=4, y=50, xend=5, yend=50, # add arrows at top of plot
+           col="#002F00", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("segment", x=-4, y=50, xend=-5, yend= 50,
+           col="#00294D", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("text", x = 4.5, y=60, label = "More Variable", color =  "#002F00", size=4) + # add text annotations above arrows
+  annotate("text", x = -4.5, y=60, label = "Less Variable", color = "#00294D", size=4) +
+  theme(legend.key.size = unit(.4, 'cm'))
+
+PVchangestat_dw
+
+##### Change in Precipitation Variability - LW
+
+range(tstats$prcp_LW_cov_tstat) # use range to set limits for color palette
+
+PVchangestat_lw <- tstats %>%
+  ggplot(aes(x = prcp_LW_cov_tstat)) + 
+  geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-8,8), name="t-statistic", rev=F, breaks=c(-8,-4,0,4,8)) + 
+  geom_vline(aes(xintercept = -1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = - 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  labs(x = "Change in coefficient of variation \n for precipitation", 
+       y = "Number of models",
+       title = "Precipitation Variability: Long-term window") +
+  coord_cartesian(xlim=c(-8,8), ylim=c(0,85)) +
+  theme_classic() +
+  theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 12),
+        legend.title = element_text(size= 9),
+        legend.text = element_text(size= 9)) +
+  annotate("segment", x=4, y=50, xend=6, yend=50, # add arrows at top of plot
+           col="#002F00", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("segment", x=-4, y=50, xend=-6, yend= 50,
+           col="#00294D", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("text", x = 5, y=60, label = "More Variable", color =  "#002F00", size=4) + # add text annotations above arrows
+  annotate("text", x = -5, y=60, label = "Less Variable", color = "#00294D", size=4) +
+  theme(legend.key.size = unit(.4, 'cm'))
+
+PVchangestat_lw
+
+
+##### Change in Light
+
+range(tstats$light_tstat) # use range to set limits for color palette
+
+NLchangestat <- tstats %>%
+  ggplot(aes(x = light_tstat)) + 
+  geom_histogram(aes(fill = after_stat(x)), binwidth = 0.2, position = "identity") + 
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", mid = 0, limits=c(-18,18), name="t-statistic", rev=F, breaks=c(-14,-7,0,7,14)) + 
+  geom_vline(aes(xintercept = -1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = - 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.44), 
+             color = "#ABABAB", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  geom_vline(aes(xintercept = 1.96), 
+             color = "#717171", 
+             linetype = "dashed", 
+             linewidth = 1) +
+  labs(x = "Change in nighttime light", 
+       y = "Number of models",
+       title = "Light Pollution") +
+  coord_cartesian(xlim=c(-18,18), ylim=c(0,200)) +
+  theme_classic() +
+  theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 12),
+        legend.title = element_text(size= 9),
+        legend.text = element_text(size= 9)) +
+  annotate("segment", x=5, y=140, xend=10, yend=140, # add arrows at top of plot
+           col="#002F00", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("segment", x=-5, y=140, xend=-10, yend= 140,
+           col="#00294D", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("text", x = 7, y=167, label = "Brighter", color =  "#002F00", size=4) + # add text annotations above arrows
+  annotate("text", x = -7, y=167, label = "Darker", color = "#00294D", size=4) +
+  theme(legend.key.size = unit(.4, 'cm'))
+
+NLchangestat
+
+# combine plots
+(row1<-wrap_elements((FYchangestat + plot_spacer() + NLchangestat) + plot_layout(widths = c(0.48, 0.04, 0.48)) + 
+                       plot_annotation(tag_levels = list(c('a', 'b'))) & theme(plot.tag = element_text(size = 14, face ="bold"))))
+(row2<-wrap_elements((TAchangestat_dw + plot_spacer() + TAchangestat_lw) + plot_layout(widths = c(0.48, 0.04, 0.48)) + 
+                       plot_annotation(tag_levels = list(c('c', 'd'))) & theme(plot.tag = element_text(size = 14, face ="bold"))))
+(row3<-wrap_elements((TPchangestat_dw + plot_spacer() + TPchangestat_lw) + plot_layout(widths = c(0.48, 0.04, 0.48)) + 
+                       plot_annotation(tag_levels = list(c('e', 'f'))) & theme(plot.tag = element_text(size = 14, face ="bold"))))
+(row4<-wrap_elements((PVchangestat_dw + plot_spacer() + PVchangestat_lw) + plot_layout(widths = c(0.48, 0.04, 0.48)) + 
+                       plot_annotation(tag_levels = list(c('g', 'h'))) & theme(plot.tag = element_text(size = 14, face ="bold"))))
+
+(tstat_hist <- row1 / row2 / row3 / row4) 
+
+ggsave(tstat_hist, filename = "FigS1_TStatHistograms.pdf", path = here("Figures"), width=26, height=32, units = "cm", device=cairo_pdf)
+ggsave(tstat_hist, filename = "FigS1_TStatHistograms.png", path = here("Figures"), width=26, height=32, units = "cm")

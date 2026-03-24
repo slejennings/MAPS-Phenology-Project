@@ -89,9 +89,7 @@ all_models_traits <- left_join(all_models_wide, eye, by="SPEC") %>%
   select(-Species) %>%
   left_join(., traits, by="SPEC") %>%
   select(-Species_name) %>%
-  rowwise() %>% mutate(AnnualPrecip_cm = AnnualPrecip/10) %>% # convert annual precip values to cm
-  left_join(., elpd) %>%
-  left_join(., waic) # POSSIBLY DELETE
+  rowwise() %>% mutate(AnnualPrecip_cm = AnnualPrecip/10) # convert annual precip values to cm
 
 # for most traits, we have values for all 20 species
 # move the Tree_name column to rownames to facilitate pairing data with phylogenetic tree
@@ -287,7 +285,8 @@ Panel_A <- eff_temp_STI +
   theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
         axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), 
-        axis.title.x = element_text(color = "black", size = 12), axis.title.y = element_text(color = "black", size = 12)) + 
+        axis.title.x = element_text(color = "black", size = 12, margin = margin(t=0.3, unit="cm")), # add space between axis title and axis labels
+        axis.title.y = element_text(color = "black", size = 12, margin = margin(r=0.3, unit="cm"))) + # add space between axis title and axis labels
   geom_hline(yintercept=0, linetype="dashed", color = "gray", linewidth=.6)
 
 Panel_A     
@@ -305,7 +304,8 @@ Panel_B <- eff_light_CT +
   theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
         axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), 
-        axis.title.x = element_text(color = "black", size = 12), axis.title.y = element_text(color = "black", size = 12)) + 
+        axis.title.x = element_text(color = "black", size = 12, margin = margin(t=0.3, unit="cm")), # add space between axis title and axis labels
+        axis.title.y = element_text(color = "black", size = 12, margin = margin(r=0.3, unit="cm"))) + # add space between axis title and axis labels
   geom_hline(yintercept=0, linetype="dashed", color = "gray", linewidth=.6)
 
 Panel_B
@@ -317,8 +317,8 @@ toprow <- (Panel_A + plot_spacer() + Panel_B) + plot_layout(widths = c(0.49, 0.0
 panelplot <- toprow +
              plot_annotation(tag_levels = 'a') & theme(plot.tag = element_text(size = 14, face ="bold"))
 
-ggsave(panelplot, filename = "Fig4_TraitPanel.pdf", path = here("Figures"), width=20, height=10, units = "cm")
-
+ggsave(panelplot, filename = "Fig4_TraitPanel.pdf", path = here("Figures"), width=22, height=11, units = "cm", device=cairo_pdf)
+ggsave(panelplot, filename = "Fig4_TraitPanel.png", path = here("Figures"), width=22, height=11, units = "cm")
 
 ####################################################################################
 ##### Tidy models and save estimates
@@ -398,11 +398,10 @@ temp_HWI_lw_tidy <- tidy(temp_HWI_lw, conf.int = T, conf.level = 0.95) %>%
   select(-p.value) %>%
   mutate_if(is.numeric, round, 3)
 
-
 light_CT_dw_tidy <- tidy(light_CT_dw, conf.int = T, conf.level = 0.95) %>%
   mutate(trait = "C.T",
          response_variable = "light pollution",
-         window = "NA",
+         window = "decision",
          sample_size = light_CT_dw$dims$N,
          lambda = 0) %>% # if lambda was fixed in the model, need to manually enter it here
   select(-p.value) %>%
@@ -411,7 +410,7 @@ light_CT_dw_tidy <- tidy(light_CT_dw, conf.int = T, conf.level = 0.95) %>%
 light_CT_lw_tidy <- tidy(light_CT_lw, conf.int = T, conf.level = 0.95) %>%
   mutate(trait = "C.T",
          response_variable = "light pollution",
-         window = "NA",
+         window = "long-term",
          sample_size = light_CT_lw$dims$N,
          lambda = 0) %>% # if lambda was fixed in the model, need to manually enter it here
   select(-p.value) %>%
