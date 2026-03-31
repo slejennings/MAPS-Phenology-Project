@@ -71,13 +71,13 @@ check_model(m2)
 ################################################################################
 
 # get the predicted effect from the decision window model
-eff_STI_dw <- plot(ggeffects::predict_response(m1, terms =c("STI")), colors = "darkseagreen")
+eff_STI_dw <- plot(ggeffects::predict_response(m1, terms =c("STI")), colors = "#6ab43e")
 
 # add data, labels, nice formatting to plot
 STI_dw_plot <- eff_STI_dw +
-  geom_point(data = combDAT, aes(x = STI, y = mean_decision), color = "darkseagreen", size = 3.1, pch = 19) +
+  geom_point(data = combDAT, aes(x = STI, y = mean_decision), color = "#6ab43e", size = 3.1, pch = 19) +
   geom_errorbar(aes(ymin = (mean_decision-se_decision), ymax = (mean_decision+se_decision), x=STI),
-                color="darkseagreen", data = combDAT,inherit.aes = FALSE, lwd=.9) +
+                color="#6ab43e", data = combDAT,inherit.aes = FALSE, lwd=.9) +
   labs(title= "", x = "Species temperature index (STI)", y = "Mean temperature change statistic")+
   theme_classic() +
   theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
@@ -110,12 +110,6 @@ STI_lw_plot <- eff_STI_lw +
 
 STI_lw_plot
 
-posthoc_plot <- (STI_dw_plot + plot_spacer() + STI_lw_plot) + plot_layout(widths = c(0.49, 0.01, 0.49)) + # add a small space between the two plots
-  plot_annotation(tag_levels = 'a') & theme(plot.tag = element_text(size = 14, face ="bold"))
-
-ggsave(posthoc_plot, filename = "Fig5_PosthocPlot.pdf", path = here("Figures"), width=22, height=11, units = "cm", device=cairo_pdf)
-ggsave(posthoc_plot, filename = "Fig5_PosthocPlot.png", path = here("Figures"), width=22, height=11, units = "cm")
-
 ####################################################
 # Examine how the STI of species relates to the latitude of the stations where they breed
 
@@ -135,20 +129,12 @@ spp_lat_STI <- tstat_sts %>% group_by(SPEC) %>%
 STI_lat_m <- lm(median_lat ~ STI, data = spp_lat_STI)
 summary(STI_lat_m)
 
-# make a plot of the relationship
-(STI_lat_plot <- spp_lat_STI %>%
-    ggplot(., aes(x=STI, y=median_lat)) +
-    geom_point() +
-    geom_smooth(method="lm") +
-    labs(x="STI", y= "Median Latitude") +
-    theme_classic())
-
 # get the predicted effect from the model
-eff_STI_lat <- plot(ggeffects::predict_response(STI_lat_m, terms =c("STI")), colors = "grey40")
+eff_STI_lat <- plot(ggeffects::predict_response(STI_lat_m, terms =c("STI")), colors = "#4F2691")
 
 # add data, labels, nice formatting to plot
 (STI_lat_plot <- eff_STI_lat +
-    geom_point(data = spp_lat_STI, aes(x = STI, y = median_lat), color = "grey40", size = 2, pch = 19) +
+    geom_point(data = spp_lat_STI, aes(x = STI, y = median_lat), color = "#4F2691", size = 2, pch = 19) +
     labs(title= "", x= "Species temperature index (STI)", y="Median latitude of MAPS stations \n where each species breeds")+
     theme_classic() +
     theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
@@ -158,12 +144,12 @@ eff_STI_lat <- plot(ggeffects::predict_response(STI_lat_m, terms =c("STI")), col
           axis.title.y = element_text(color = "black", size = 12, margin = margin(r=0.3, unit="cm")))) # add space between axis title and axis labels
 
 ####################################################
-
 # find the mean change in temperature anomaly for the decision and long-term window at each MAPS stations
 # this averages all the species at a station
 # reminder: each species has it's own 30-day and 60-day decision window 
 # this means that the range of dates encompassed by the DW and LW differ between species
 # because of these differences, averaging is probably more appropriate for the long-term window where there is more likely to be overlap in the dates covered
+
 STA_tempanom <- tstats %>% 
   group_by(STA) %>%
   summarize(mean_dw_tempanom = mean(tempanom_DW_tstat), # mean change in temp anomaly at each station for DW
@@ -171,38 +157,19 @@ STA_tempanom <- tstats %>%
   left_join(., stations) # add the coordinates of the stations
 
 # model relationship between species' STI and median latitude of the MAPS stations where they breed
-# first, for the decision window
-STA_tempanom_dw_m <- lm(DECLAT ~ mean_dw_tempanom, data = STA_tempanom)
-summary(STA_tempanom_dw_m)
 # for the long-term window
 STA_tempanom_lw_m <- lm(DECLAT ~ mean_lw_tempanom, data = STA_tempanom)
 summary(STA_tempanom_lw_m) # strong negative relationship
 # positive values for ave change in temp anomalies are warming whereas negative values are cooling
 # stations at lower latitudes (more southern) are experiencing greater warming than stations at higher latitudes
 
-# make a plot for the decision window relationship
-# get the predicted effect from the model
-eff_STA_tempanom_dw <- plot(ggeffects::predict_response(STA_tempanom_dw_m, terms =c("mean_dw_tempanom")), colors = "grey40")
-
-# add data, labels, nice formatting to plot
-(TA_tempanom_dw_plot <- eff_STA_tempanom_dw +
-  geom_point(data = STA_tempanom, aes(x = mean_dw_tempanom, y = DECLAT), color = "grey40", size = 2, pch = 19) +
-  labs(title= "", x= "Average change in temperature anomaly \n during the decision window", y="MAPS station latitude")+
-  theme_classic() +
-    theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-          axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), 
-          axis.title.x = element_text(color = "black", size = 12, margin = margin(t=0.3, unit="cm")), # add space between axis title and axis labels
-          axis.title.y = element_text(color = "black", size = 12, margin = margin(r=0.3, unit="cm")))) # add space between axis title and axis labels
-
-
 # make a plot for the long-term window relationship
 # get the predicted effect from the model
-eff_STA_tempanom_lw <- plot(ggeffects::predict_response(STA_tempanom_lw_m, terms =c("mean_lw_tempanom")), colors = "grey40")
+eff_STA_tempanom_lw <- plot(ggeffects::predict_response(STA_tempanom_lw_m, terms =c("mean_lw_tempanom")), colors = "#077B82")
 
 # add data, labels, nice formatting to plot
 (TA_tempanom_lw_plot <- eff_STA_tempanom_lw +
-    geom_point(data = STA_tempanom, aes(x = mean_lw_tempanom, y = DECLAT), color = "grey40", size = 2, pch = 19) +
+    geom_point(data = STA_tempanom, aes(x = mean_lw_tempanom, y = DECLAT), color = "#077B82", size = 2, pch = 19) +
     labs(title= "", x= "Average change in temperature anomaly \n during the long-term window", y="MAPS station latitude")+
     theme_classic() +
     theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
@@ -212,8 +179,15 @@ eff_STA_tempanom_lw <- plot(ggeffects::predict_response(STA_tempanom_lw_m, terms
           axis.title.y = element_text(color = "black", size = 12, margin = margin(r=0.3, unit="cm")))) # add space between axis title and axis labels
 
 #### combine plots
-posthoc_plot2 <- (STI_lat_plot + plot_spacer() + TA_tempanom_lw_plot) + plot_layout(widths = c(0.49, 0.01, 0.49)) + # add a small space between the two plots
-  plot_annotation(tag_levels = 'a') & theme(plot.tag = element_text(size = 14, face ="bold"))
 
-ggsave(posthoc_plot2, filename = "PosthocPlot2.pdf", path = here("Figures"), width=22, height=11, units = "cm", device=cairo_pdf)
-ggsave(posthoc_plot2, filename = "PosthocPlot2.png", path = here("Figures"), width=22, height=11, units = "cm")
+posthoc_R1 <- wrap_elements((STI_dw_plot + plot_spacer() + STI_lw_plot) + plot_layout(widths = c(0.49, 0.01, 0.49)) + # add a small space between the two plots
+  plot_annotation(tag_levels = list(c('(a)', '(b)'))) & theme(plot.tag = element_text(size = 14, face ="bold")))
+
+posthoc_R2 <- wrap_elements((STI_lat_plot + plot_spacer() + TA_tempanom_lw_plot) + plot_layout(widths = c(0.49, 0.01, 0.49)) + # add a small space between the two plots
+  plot_annotation(tag_levels = list(c('(c)', '(d)'))) & theme(plot.tag = element_text(size = 14, face ="bold")))
+
+(posthoc_plot <- posthoc_R1/posthoc_R2)
+
+ggsave(posthoc_plot, filename = "Fig5_PosthocPlot.pdf", path = here("Figures"), width=22, height=22, units = "cm", device=cairo_pdf)
+ggsave(posthoc_plot, filename = "Fig5_PosthocPlot.png", path = here("Figures"), width=22, height=20, units = "cm")
+

@@ -64,3 +64,6 @@ lwmodels_loo.rds
 
 # Geospatial nighttime light files (.tif) that are large
 *.tif
+
+# certain folders in R Project
+/Bonus stuff

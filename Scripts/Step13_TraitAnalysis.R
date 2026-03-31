@@ -280,7 +280,7 @@ eff_temp_STI <- plot(ggeffects::predict_response(temp_STI_lw, terms =c("STI")), 
 # add data, labels, nice formatting to plot
 Panel_A <- eff_temp_STI +
   geom_point(data = birddat_20spp, aes(x = STI, y = scaletempanom_LW_tstat), color = "darkseagreen", size = 3.1, pch = 19)+
-  labs(title= "", x = "Species temperature index (STI)", y = "Sensitivity to temperature anomalies")+
+  labs(title= "", x = "Species temperature index (STI)", y = "Phenological responsiveness \n to temperature anomalies")+
   theme_classic() +
   theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
@@ -299,7 +299,7 @@ eff_light_CT <- plot(ggeffects::predict_response(light_CT_lw, terms =c("C.T")), 
 # add data, labels, nice formatting to plot
 Panel_B <- eff_light_CT +
   geom_point(data = birddat_18spp, aes(x = C.T, y = scalelight_LW_tstat), color = "#DEB70D", size = 3.1, pch = 19)+
-  labs(title= "", x = "Dim light vision", y = "Sensitivity to light pollution")+
+  labs(title= "", x = "Dim light vision", y = "Phenological responsiveness \n to light pollution")+
   theme_classic() +
   theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
@@ -313,12 +313,11 @@ Panel_B
 # combine panels and export
 toprow <- (Panel_A + plot_spacer() + Panel_B) + plot_layout(widths = c(0.49, 0.01, 0.49)) # add a small space between the two plots
 
-
 panelplot <- toprow +
-             plot_annotation(tag_levels = 'a') & theme(plot.tag = element_text(size = 14, face ="bold"))
+  plot_annotation(tag_levels = list(c('(a)', '(b)'))) & theme(plot.tag = element_text(size = 14, face ="bold"))
 
 ggsave(panelplot, filename = "Fig4_TraitPanel.pdf", path = here("Figures"), width=22, height=11, units = "cm", device=cairo_pdf)
-ggsave(panelplot, filename = "Fig4_TraitPanel.png", path = here("Figures"), width=22, height=11, units = "cm")
+#ggsave(panelplot, filename = "Fig4_TraitPanel.png", path = here("Figures"), width=22, height=11, units = "cm")
 
 ####################################################################################
 ##### Tidy models and save estimates
