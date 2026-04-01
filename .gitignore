@@ -62,6 +62,10 @@ lw_sppmodels_noGP.rds
 dwmodels_loo.rds
 lwmodels_loo.rds
 
+# Files to create Fig1 which was made outside of R
+Fig1_StudyDesign.pdf
+Fig1_StudyDesign.pptx
+
 # Geospatial nighttime light files (.tif) that are large
 *.tif
 
