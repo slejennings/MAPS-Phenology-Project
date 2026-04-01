@@ -171,16 +171,14 @@ confint(STA_tempanom_lw_m)
 # positive values for ave change in temp anomalies are warming whereas negative values are cooling
 # stations at lower latitudes (more southern) are experiencing greater warming than stations at higher latitudes
 
-
-summary(lm(mean_lw_tempanom ~ DECLAT, data = STA_tempanom))
-summary(lm(DECLAT ~ mean_lw_tempanom, data = STA_tempanom))
-
 # make a plot for the long-term window relationship
 # get the predicted effect from the model
 eff_STA_tempanom_lw <- plot(ggeffects::predict_response(STA_tempanom_lw_m, terms =c("DECLAT")), colors = "#077B82")
 
 # add data, labels, nice formatting to plot
 
+# for stations with only one species, we need an NA for the errorbars to keep ggplot happy
+# create a modified data frame for plotting
 STA_tempanom_plot <- STA_tempanom %>%
   rowwise() %>%
   mutate(
