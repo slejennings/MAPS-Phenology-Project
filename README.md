@@ -5,7 +5,8 @@
 ############################################################################
 
 This repository contains data and code for the analyses in the manuscript "XXXXX". The analyses are organized into an R Project, which will reproduce the results, tables, and figures presented in the manuscript. This Read Me file describes the required software and the organization of the R Project and the associated files.
-Important: certain files are too large to sync with this GitHub repository and need to be downloaded from the accompanying FigShare folder. This applies to any file marked with an asterisk (*) at the end of the file’s name. Link to FigShare folder: XXXXXX
+
+Important: certain files are too large to sync with this GitHub repository and need to be downloaded from the accompanying FigShare folder. This applies to any file marked with an asterisk (*) at the end of the filename. Link to FigShare folder: XXXXXX
 
 
 ############################################################################
@@ -267,11 +268,11 @@ MAPS-Phenology-2017-to-2018-prcp-DAYMET-004-results.csv
 
 **List of Files:**
 
-Harmonized_DN_NTL_2009_calDMSP.tif
+Harmonized_DN_NTL_2009_calDMSP.tif*
 
-Harmonized_DN_NTL_2010_calDMSP.tif
+Harmonized_DN_NTL_2010_calDMSP.tif*
 
-Harmonized_DN_NTL_2011_calDMSP.tif
+Harmonized_DN_NTL_2011_calDMSP.tif*
 
 -------------------------------------------------------------------------------------------------------------------
 
@@ -285,53 +286,53 @@ Harmonized_DN_NTL_2011_calDMSP.tif
 
 **List of Files:**
 
-Harmonized_DN_NTL_1992_calDMSP.tif 
+Harmonized_DN_NTL_1992_calDMSP.tif*
 
-Harmonized_DN_NTL_1993_calDMSP.tif
+Harmonized_DN_NTL_1993_calDMSP.tif*
 
-Harmonized_DN_NTL_1994_calDMSP.tif 
+Harmonized_DN_NTL_1994_calDMSP.tif* 
 
-Harmonized_DN_NTL_1995_calDMSP.tif 
+Harmonized_DN_NTL_1995_calDMSP.tif* 
 
-Harmonized_DN_NTL_1996_calDMSP.tif
+Harmonized_DN_NTL_1996_calDMSP.tif*
 
-Harmonized_DN_NTL_1997_calDMSP.tif
+Harmonized_DN_NTL_1997_calDMSP.tif*
 
-Harmonized_DN_NTL_1998_calDMSP.tif
+Harmonized_DN_NTL_1998_calDMSP.tif*
 
-Harmonized_DN_NTL_1999_calDMSP.tif
+Harmonized_DN_NTL_1999_calDMSP.tif*
 
-Harmonized_DN_NTL_2000_calDMSP.tif
+Harmonized_DN_NTL_2000_calDMSP.tif*
 
-Harmonized_DN_NTL_2001_calDMSP.tif
+Harmonized_DN_NTL_2001_calDMSP.tif*
 
-Harmonized_DN_NTL_2002_calDMSP.tif
+Harmonized_DN_NTL_2002_calDMSP.tif*
 
-Harmonized_DN_NTL_2003_calDMSP.tif
+Harmonized_DN_NTL_2003_calDMSP.tif*
 
-Harmonized_DN_NTL_2004_calDMSP.tif
+Harmonized_DN_NTL_2004_calDMSP.tif*
 
-Harmonized_DN_NTL_2005_calDMSP.tif
+Harmonized_DN_NTL_2005_calDMSP.tif*
 
-Harmonized_DN_NTL_2006_calDMSP.tif
+Harmonized_DN_NTL_2006_calDMSP.tif*
 
-Harmonized_DN_NTL_2007_calDMSP.tif
+Harmonized_DN_NTL_2007_calDMSP.tif*
 
-Harmonized_DN_NTL_2008_calDMSP.tif
+Harmonized_DN_NTL_2008_calDMSP.tif*
 
-Harmonized_DN_NTL_2012_calDMSP.tif
+Harmonized_DN_NTL_2012_calDMSP.tif*
 
-Harmonized_DN_NTL_2013_calDMSP.tif
+Harmonized_DN_NTL_2013_calDMSP.tif*
 
-Harmonized_DN_NTL_2014_simVIIRS.tif
+Harmonized_DN_NTL_2014_simVIIRS.tif*
 
-Harmonized_DN_NTL_2015_simVIIRS.tif
+Harmonized_DN_NTL_2015_simVIIRS.tif*
 
-Harmonized_DN_NTL_2016_simVIIRS.tif
+Harmonized_DN_NTL_2016_simVIIRS.tif*
 
-Harmonized_DN_NTL_2017_simVIIRS.tif
+Harmonized_DN_NTL_2017_simVIIRS.tif*
 
-Harmonized_DN_NTL_2018_simVIIRS.tif
+Harmonized_DN_NTL_2018_simVIIRS.tif*
 
 ############################################################################
 
