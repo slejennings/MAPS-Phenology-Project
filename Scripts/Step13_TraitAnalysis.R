@@ -316,8 +316,8 @@ toprow <- (Panel_A + plot_spacer() + Panel_B) + plot_layout(widths = c(0.49, 0.0
 panelplot <- toprow +
   plot_annotation(tag_levels = list(c('(a)', '(b)'))) & theme(plot.tag = element_text(size = 14, face ="bold"))
 
-ggsave(panelplot, filename = "Fig4_TraitPanel.pdf", path = here("Figures"), width=22, height=11, units = "cm", device=cairo_pdf)
-#ggsave(panelplot, filename = "Fig4_TraitPanel.png", path = here("Figures"), width=22, height=11, units = "cm")
+ggsave(panelplot, filename = "Fig4_TraitPanel.pdf", path = here("Figures"), width=22, height=10, units = "cm", device=cairo_pdf)
+#ggsave(panelplot, filename = "Fig4_TraitPanel.png", path = here("Figures"), width=22, height=10, units = "cm")
 
 ####################################################################################
 ##### Tidy models and save estimates

@@ -75,7 +75,7 @@ eff_STI_dw <- plot(ggeffects::predict_response(m1, terms =c("STI")), colors = "#
 
 # add data, labels, nice formatting to plot
 STI_dw_plot <- eff_STI_dw +
-  geom_point(data = combDAT, aes(x = STI, y = mean_decision), color = "#6ab43e", size = 3.1, pch = 19) +
+  geom_point(data = combDAT, aes(x = STI, y = mean_decision), color = "#6ab43e", size = 2.5, pch = 19) +
   geom_errorbar(aes(ymin = (mean_decision-se_decision), ymax = (mean_decision+se_decision), x=STI),
                 color="#6ab43e", data = combDAT,inherit.aes = FALSE, lwd=.9) +
   labs(title= "", x = "Species temperature index (STI)", y = "Mean temperature change statistic")+
@@ -95,7 +95,7 @@ eff_STI_lw <- plot(ggeffects::predict_response(m2, terms =c("STI")), colors = "#
 
 # add data, labels, nice formatting to plot
 STI_lw_plot <- eff_STI_lw +
-  geom_point(data = combDAT, aes(x = STI, y = mean_long), color = "#1768B3", size = 3.1, pch = 19) +
+  geom_point(data = combDAT, aes(x = STI, y = mean_long), color = "#1768B3", size = 2.5, pch = 19) +
   geom_errorbar(aes(ymin = (mean_long-se_long), ymax = (mean_long+se_long), x=STI),
                 color="#1768B3", data = combDAT,inherit.aes = FALSE, lwd=.9) +
   labs(title= "", x = "Species temperature index (STI)", y = "Mean temperature change statistic")+
@@ -120,22 +120,27 @@ stations$STA <- as.factor(stations$STA) # convert STA to factor
 # combine t-stats with station coordinates
 tstat_sts <- left_join(tstats, stations)
 
-# find the median latitude of the MAPS stations where each species breeds
+# find the mean latitude of the MAPS stations where each species breeds
 spp_lat_STI <- tstat_sts %>% group_by(SPEC) %>%
-  summarize(median_lat = median(DECLAT)) %>%
+  summarize(mean_lat = mean(DECLAT),
+            n_lat = n(),
+            se_lat = sd(DECLAT)/sqrt(n_lat)) %>%
   left_join(., STI)
 
 # model relationship between species' STI and median latitude of the MAPS stations where they breed
-STI_lat_m <- lm(median_lat ~ STI, data = spp_lat_STI)
+STI_lat_m <- gls(mean_lat ~ STI, data = spp_lat_STI, weights = varFixed(~1/sqrt(se_lat)), method = "ML")
 summary(STI_lat_m)
+confint(STI_lat_m)
 
 # get the predicted effect from the model
 eff_STI_lat <- plot(ggeffects::predict_response(STI_lat_m, terms =c("STI")), colors = "#4F2691")
 
 # add data, labels, nice formatting to plot
 (STI_lat_plot <- eff_STI_lat +
-    geom_point(data = spp_lat_STI, aes(x = STI, y = median_lat), color = "#4F2691", size = 2, pch = 19) +
-    labs(title= "", x= "Species temperature index (STI)", y="Median latitude of MAPS stations \n where each species breeds")+
+    geom_point(data = spp_lat_STI, aes(x = STI, y = mean_lat), color = "#4F2691", size = 2.5, pch = 19) +
+    geom_errorbar(aes(ymin = (mean_lat-se_lat), ymax = (mean_lat+se_lat), x=STI),
+                  color="#4F2691", data = spp_lat_STI, inherit.aes = FALSE, lwd=.9) +
+    labs(title= "", x= "Species temperature index (STI)", y="Mean latitude of MAPS stations \n where each species breeds")+
     theme_classic() +
     theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
@@ -152,25 +157,46 @@ eff_STI_lat <- plot(ggeffects::predict_response(STI_lat_m, terms =c("STI")), col
 
 STA_tempanom <- tstats %>% 
   group_by(STA) %>%
-  summarize(mean_dw_tempanom = mean(tempanom_DW_tstat), # mean change in temp anomaly at each station for DW
-            mean_lw_tempanom = mean(tempanom_LW_tstat)) %>% # mean change in temp anomaly at each station for LW
+  summarize(mean_lw_tempanom = mean(tempanom_LW_tstat), # mean change in temp anomaly at each station for LW
+            n_lw_tempanom = n(),
+            se_lw_tempanom = sd(tempanom_LW_tstat)/n_lw_tempanom) %>% 
+  mutate(se_lw_tempanom = ifelse(is.na(se_lw_tempanom), 0, se_lw_tempanom)) %>% # some stations only have one species, so we must replace NAs for SE with 0
   left_join(., stations) # add the coordinates of the stations
 
 # model relationship between species' STI and median latitude of the MAPS stations where they breed
 # for the long-term window
-STA_tempanom_lw_m <- lm(DECLAT ~ mean_lw_tempanom, data = STA_tempanom)
-summary(STA_tempanom_lw_m) # strong negative relationship
+STA_tempanom_lw_m <- gls(mean_lw_tempanom ~ DECLAT, data = STA_tempanom, weights = varFixed(~1/sqrt(se_lw_tempanom)), method = "ML")
+summary(STA_tempanom_lw_m) 
+confint(STA_tempanom_lw_m)
 # positive values for ave change in temp anomalies are warming whereas negative values are cooling
 # stations at lower latitudes (more southern) are experiencing greater warming than stations at higher latitudes
 
+
+summary(lm(mean_lw_tempanom ~ DECLAT, data = STA_tempanom))
+summary(lm(DECLAT ~ mean_lw_tempanom, data = STA_tempanom))
+
 # make a plot for the long-term window relationship
 # get the predicted effect from the model
-eff_STA_tempanom_lw <- plot(ggeffects::predict_response(STA_tempanom_lw_m, terms =c("mean_lw_tempanom")), colors = "#077B82")
+eff_STA_tempanom_lw <- plot(ggeffects::predict_response(STA_tempanom_lw_m, terms =c("DECLAT")), colors = "#077B82")
 
 # add data, labels, nice formatting to plot
+
+STA_tempanom_plot <- STA_tempanom %>%
+  rowwise() %>%
+  mutate(
+    ymin_bar = case_when(
+    n_lw_tempanom == 1 ~ NA,
+    n_lw_tempanom >1 ~ mean_lw_tempanom-se_lw_tempanom),
+    ymax_bar = case_when(
+      n_lw_tempanom == 1 ~ NA,
+      n_lw_tempanom >1 ~ mean_lw_tempanom+se_lw_tempanom),
+    )
+
 (TA_tempanom_lw_plot <- eff_STA_tempanom_lw +
-    geom_point(data = STA_tempanom, aes(x = mean_lw_tempanom, y = DECLAT), color = "#077B82", size = 2, pch = 19) +
-    labs(title= "", x= "Average change in temperature anomaly \n during the long-term window", y="MAPS station latitude")+
+    geom_point(data = STA_tempanom_plot, aes(x = DECLAT, y = mean_lw_tempanom), color = "#077B82", size = 2, pch = 19) +
+    geom_errorbar(aes(ymin = ymin_bar, ymax = ymax_bar, x= DECLAT),
+                  color="#077B82", data = STA_tempanom_plot, inherit.aes = FALSE, lwd=.8, na.rm=T) +
+    labs(title= "", y = "Average change in temperature \n anomaly (\u00b0C) for the long-term window", x ="MAPS station latitude")+
     theme_classic() +
     theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
@@ -188,6 +214,6 @@ posthoc_R2 <- wrap_elements((STI_lat_plot + plot_spacer() + TA_tempanom_lw_plot)
 
 (posthoc_plot <- posthoc_R1/posthoc_R2)
 
-ggsave(posthoc_plot, filename = "Fig5_PosthocPlot.pdf", path = here("Figures"), width=22, height=22, units = "cm", device=cairo_pdf)
-ggsave(posthoc_plot, filename = "Fig5_PosthocPlot.png", path = here("Figures"), width=22, height=20, units = "cm")
+ggsave(posthoc_plot, filename = "Fig5_PosthocPlot.pdf", path = here("Figures"), width=22, height=20, units = "cm", device=cairo_pdf)
+#ggsave(posthoc_plot, filename = "Fig5_PosthocPlot.png", path = here("Figures"), width=22, height=20, units = "cm")
 
