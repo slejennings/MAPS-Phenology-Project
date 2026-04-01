@@ -136,7 +136,7 @@ treeplusheatmap <- gheatmap(
   colnames_position="top",
   font.size=3,
   hjust=0, 
-  custom_column_labels = c("Temp. Anomaly - decision", "Temp. Anomaly - long", "Precipitation - decision", "Precipitation - long", "Precipitation COV - decision", "Precipitation COV - long", "Light Pollution - decision", "Light Pollution - long")) +
+  custom_column_labels = c("Temperature Anomaly - decision", "Temperature Anomaly - long", "Total Precipitation - decision", "Total Precipitation - long", "Precipitation Variability - decision", "Precipitation Variability - long", "Light Pollution - decision", "Light Pollution - long")) +
   scale_fill_continuous_diverging(palette = "custom_bluegreen", n_interp=13, mid = 0, limits=c(-4.25,4.25), name="t-statistic", rev=F)+
   vexpand(.2,1) +
   theme(axis.title.x = element_text(size = 8, face = "bold"),
@@ -146,8 +146,8 @@ treeplusheatmap <- gheatmap(
 treeplusheatmap
 
 # save
-ggsave(treeplusheatmap, filename = "Fig3_TreePlusHeatMap.pdf", path = here("Figures"), width=20, height=20, units = "cm", device=cairo_pdf)
-#ggsave(treeplusheatmap, filename = "Fig3_TreePlusHeatMap.png", path = here("Figures"), width=20, height=20, units = "cm")
+ggsave(treeplusheatmap, filename = "Fig3_TreePlusHeatMap.pdf", path = here("Figures"), width=20, height=21, units = "cm", device=cairo_pdf)
+ggsave(treeplusheatmap, filename = "Fig3_TreePlusHeatMap.png", path = here("Figures"), width=20, height=21, units = "cm")
 
 
 ########################################################################################################
