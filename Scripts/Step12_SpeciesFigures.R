@@ -777,6 +777,6 @@ for(i in unique(tstats_plot$SPEC)){
                     theme = theme(plot.title = element_text(size = 14, face="bold", hjust=0.5))) 
   
   ggsave(spp_tstat_hist, filename = paste(i, "_FigS2.pdf", sep = "_"), path = here("Figures/Figure S2"), width=26, height=32, units = "cm", device=cairo_pdf)
-  
+  ggsave(spp_tstat_hist, filename = paste(i, "_FigS2.png", sep = "_"), path = here("Figures/Figure S2"), width=26, height=32, units = "cm")
 }
 

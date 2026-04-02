@@ -275,11 +275,11 @@ check_model(light_CT_lw)
 ###### Panel A: using temp_STI_lw ##########
 
 # get effect of STI on the model statistics for change in temperature anomalies
-eff_temp_STI <- plot(ggeffects::predict_response(temp_STI_lw, terms =c("STI")), colors = "darkseagreen")
+eff_temp_STI <- plot(ggeffects::predict_response(temp_STI_lw, terms =c("STI")), colors = "#699864")
 
 # add data, labels, nice formatting to plot
 Panel_A <- eff_temp_STI +
-  geom_point(data = birddat_20spp, aes(x = STI, y = scaletempanom_LW_tstat), color = "darkseagreen", size = 3.1, pch = 19)+
+  geom_point(data = birddat_20spp, aes(x = STI, y = scaletempanom_LW_tstat), color = "#699864", size = 3.1, pch = 19)+
   labs(title= "", x = "Species temperature index (STI)", y = "Phenological responsiveness \n to temperature anomalies")+
   theme_classic() +
   theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),

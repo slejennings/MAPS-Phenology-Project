@@ -70,7 +70,7 @@ check_model(m2)
 ### Make plots
 ################################################################################
 
-# get the predicted effect from the decision window model
+# get the predicted effect from the decision window model 
 eff_STI_dw <- plot(ggeffects::predict_response(m1, terms =c("STI")), colors = "#6ab43e")
 
 # add data, labels, nice formatting to plot
@@ -90,7 +90,7 @@ STI_dw_plot <- eff_STI_dw +
 STI_dw_plot
 
 
-# get the predicted effect from the decision window model
+# get the predicted effect from the decision window model 
 eff_STI_lw <- plot(ggeffects::predict_response(m2, terms =c("STI")), colors = "#1768B3")
 
 # add data, labels, nice formatting to plot
@@ -194,8 +194,9 @@ STA_tempanom_plot <- STA_tempanom %>%
     geom_point(data = STA_tempanom_plot, aes(x = DECLAT, y = mean_lw_tempanom), color = "#077B82", size = 2, pch = 19) +
     geom_errorbar(aes(ymin = ymin_bar, ymax = ymax_bar, x= DECLAT),
                   color="#077B82", data = STA_tempanom_plot, inherit.aes = FALSE, lwd=.8, na.rm=T) +
-    labs(title= "", y = "Average change in temperature \n anomaly (\u00b0C) for the long-term window", x ="MAPS station latitude")+
+    labs(title= "", y = "Mean temperature change statistic \n for the long-term window", x ="MAPS station latitude")+
     theme_classic() +
+    geom_hline(yintercept=0, linetype="dashed", color = "gray", linewidth=.6) +
     theme(panel.border = element_rect(colour = "black", fill = NA, linewidth = 1), panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
           axis.text.x = element_text(color = "black", size = 12), axis.text.y = element_text(color = "black", size = 12), 
