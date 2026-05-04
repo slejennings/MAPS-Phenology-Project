@@ -1,6 +1,6 @@
 ###### MAPS Phenology #######
 ### Script name: Step13_TraitAnalyses.R
-## Author(s): LP, CDF, SLJ
+## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################
 # run trait-based phylogenetic models

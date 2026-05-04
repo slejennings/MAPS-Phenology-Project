@@ -1,6 +1,6 @@
 ###### MAPS Phenology #######
 ### Script name: Step8_BayesianSpeciesModels.R
-## Author(s): LP, CDF, SLJ
+## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################
 # the goal of this script is to run models for each species examining the relationship between change in breeding phenology and change in environmental variables (light, climate)

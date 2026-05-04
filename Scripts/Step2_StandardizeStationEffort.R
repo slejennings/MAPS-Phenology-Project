@@ -1,6 +1,6 @@
 ###### MAPS Phenology #######
 ### Script name: Step2_StandardizeStationEffort.R
-## Author(s): SLJ
+## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################
 # a goal of the MAPS program is that stations perform consistent/standardized monitoring effort within and across years

@@ -1,6 +1,6 @@
 ###### MAPS Phenology #######
 ### Script name: Step3_FilterCaptureData.R
-## Author(s): SLJ
+## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################
 # This script filters the bird capture data to retain only records from the stations, years and IPs identified in Step3

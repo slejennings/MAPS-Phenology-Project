@@ -1,5 +1,5 @@
 ###### MAPS Phenology #######
-### Author(s): SLJ
+### Author(s): XXX (removed for peer review)
 ### Script name: Step1_RefineStationList.R
 
 ########## Objective/Description of Script #####################

@@ -1,6 +1,6 @@
 ###### MAPS Phenology #######
 ### Script name: Step9_CompareModels.R
-## Author(s): SLJ
+## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################
 # Compare species models with exact GP, approximate GP and no GP

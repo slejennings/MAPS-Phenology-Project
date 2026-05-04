@@ -1,6 +1,6 @@
 ###### MAPS Phenology #######
 ### Script name: Step11_DWLWModelComparison.R
-## Author(s): SLJ
+## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################
 # this script compares the long-term and decision window model for each species using the loo package

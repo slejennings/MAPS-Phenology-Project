@@ -1,5 +1,5 @@
 ###### MAPS Phenology #######
-### Author(s): LP, SLJ
+### Author(s): XXX (removed for peer review)
 ### Script name: Step6_CalculatingClimateVariables.R
 
 ########## Objective/Description of Script #####################

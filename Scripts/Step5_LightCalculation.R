@@ -1,6 +1,6 @@
 ###### MAPS Phenology #######
 ### Script name: Step5_LightCalculation.R
-## Author(s): SLJ
+## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################
 # extract annual nighttime light values for each MAPS station for 1992 through 2018

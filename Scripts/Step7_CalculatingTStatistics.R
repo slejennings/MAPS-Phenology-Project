@@ -1,5 +1,5 @@
 ###### MAPS Phenology #######
-### Author(s): SLJ, LP
+### Author(s): XXX (removed for peer review)
 ### Script name: Step7_CalculatingTStatistics.R
 
 ########## Objective/Description of Script #####################

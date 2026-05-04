@@ -1,6 +1,6 @@
 ###### MAPS Phenology #######
 ### Script name: Step12_SpeciesFigures.R
-## Author(s): CDF, LP, SLJ
+## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################
 # this script creates multiple figures for the manuscript that accompanies this analysis

@@ -1,6 +1,6 @@
 ###### MAPS Phenology #######
 ### Script name: Step10_ModelValidation&Estimates.R
-## Author(s): SLJ
+## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################
 # Extract parameter estimates for decision and long-term models

@@ -1,6 +1,6 @@
 ###### MAPS Phenology #######
 ### Script name: Step14_PosthocAnalyses.R
-## Author(s): CDF, SLJ
+## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################
 # run posthoc analysis to compare mean change in temperature experienced by each species with their STI

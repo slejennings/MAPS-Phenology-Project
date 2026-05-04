@@ -1,6 +1,6 @@
 ###### MAPS Phenology #######
 ### Script name: Step4_IdentifySpeciesStationsforModels.R
-## Author(s): SLJ
+## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################
 # The goal of this script is to examine remaining capture records
