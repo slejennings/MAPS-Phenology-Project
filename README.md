@@ -15,10 +15,7 @@ Important: certain files are too large to sync with this GitHub repository and n
 
 Please direct questions about the data, analysis, and results to:
 
-Sarah L. Jennings: sjenni02[at]calpoly.edu
-
-Clinton D. Francis: cdfranci[at]calpoly.edu
-
+Removed for peer review
 
 ############################################################################
 ### SOFTWARE
