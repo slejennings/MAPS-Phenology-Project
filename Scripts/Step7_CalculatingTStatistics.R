@@ -38,8 +38,10 @@ FY_tstat <- env_FY_data %>%
          tidy_m = purrr::map(model, broom::tidy)) %>% # tidy the model
   unnest(tidy_m) %>% # unnest the tidied models
   filter(term == "year") %>% # keep just the model coefficients for year (drop the intercept)
-  select(STA, SPEC, statistic) %>% # identify columns to keep
+  select(STA, SPEC, estimate, statistic) %>% # identify columns to keep
   rename(FY_tstat = statistic)
+
+cor(FY_tstat$estimate, FY_tstat$FY_tstat)
 
 #################################
 ### Get t-statistics for change in temperature anomalies 
@@ -54,13 +56,18 @@ tempanom_tstat <- env_FY_data %>%
          LW_tidy = purrr::map(LW_model, broom::tidy)) %>%
   unnest(DW_tidy) %>% # unnest each set of tidied models one at a time. Starting with the decision window models
   filter(term == "year") %>%
-  select(STA, SPEC, statistic, LW_tidy) %>%
-  rename(tempanom_DW_tstat = statistic) %>% 
+  select(STA, SPEC, estimate, statistic, LW_tidy) %>%
+  rename(tempanom_DW_estimate = estimate,
+         tempanom_DW_tstat = statistic) %>% 
   unnest(LW_tidy) %>% # next, unnest the tidied long-term window models and add those to the df
   filter(term == "year") %>%
-  select(STA, SPEC, tempanom_DW_tstat, statistic) %>%
-  rename(tempanom_LW_tstat = statistic)
+  select(STA, SPEC, tempanom_DW_estimate, tempanom_DW_tstat, estimate, statistic) %>%
+  rename(tempanom_LW_estimate = estimate,
+         tempanom_LW_tstat = statistic)
 
+
+cor(tempanom_tstat$tempanom_LW_estimate, tempanom_tstat$tempanom_LW_tstat)
+cor(tempanom_tstat$tempanom_DW_estimate, tempanom_tstat$tempanom_DW_tstat)
 
 ################################
 ### Get t-statistics for change in total precipitation 
@@ -76,12 +83,17 @@ prcp_total_tstat <- env_FY_data %>%
          LW_tidy = purrr::map(LW_model, broom::tidy)) %>%
   unnest(DW_tidy) %>%
   filter(term == "year") %>%
-  select(STA, SPEC, statistic, LW_tidy) %>%
-  rename(prcp_DW_total_tstat = statistic) %>%
+  select(STA, SPEC, estimate, statistic, LW_tidy) %>%
+  rename(prcp_DW_total_estimate = estimate,
+         prcp_DW_total_tstat = statistic) %>%
   unnest(LW_tidy) %>%
   filter(term == "year") %>%
-  select(STA, SPEC, prcp_DW_total_tstat, statistic) %>%
-  rename(prcp_LW_total_tstat = statistic)
+  select(STA, SPEC, prcp_DW_total_estimate, prcp_DW_total_tstat, estimate, statistic) %>%
+  rename(prcp_LW_total_estimate = estimate,
+         prcp_LW_total_tstat = statistic)
+
+cor(prcp_total_tstat$prcp_LW_total_estimate, prcp_total_tstat$prcp_LW_total_tstat)
+cor(prcp_total_tstat$prcp_DW_total_estimate, prcp_total_tstat$prcp_DW_total_tstat)
 
 ################################
 #### Get t-statistics for change in coefficient of variation for precipitation
@@ -97,13 +109,17 @@ prcp_cov_tstat <- env_FY_data %>%
          LW_tidy = purrr::map(LW_model, broom::tidy)) %>%
   unnest(DW_tidy) %>%
   filter(term == "year") %>%
-  select(STA, SPEC, statistic, LW_tidy) %>%
-  rename(prcp_DW_cov_tstat = statistic) %>%
+  select(STA, SPEC, estimate, statistic, LW_tidy) %>%
+  rename( prcp_DW_cov_estimate = estimate,
+          prcp_DW_cov_tstat = statistic) %>%
   unnest(LW_tidy) %>%
   filter(term == "year") %>%
-  select(STA, SPEC, prcp_DW_cov_tstat, statistic) %>%
-  rename(prcp_LW_cov_tstat = statistic)
+  select(STA, SPEC, prcp_DW_cov_estimate, prcp_DW_cov_tstat, estimate, statistic) %>%
+  rename(prcp_LW_cov_estimate = estimate,
+         prcp_LW_cov_tstat = statistic)
 
+cor(prcp_cov_tstat$prcp_LW_cov_estimate, prcp_cov_tstat$prcp_LW_cov_tstat)
+cor(prcp_cov_tstat$prcp_DW_cov_estimate, prcp_cov_tstat$prcp_DW_cov_tstat)
 
 #########################################
 #### Get t-statistics for change in nighttime light 
@@ -117,18 +133,22 @@ light_tstat <- env_FY_data %>%
          m_tidy = purrr::map(model, broom::tidy)) %>%
   unnest(m_tidy) %>%
   filter(term == "year") %>%
-  select(STA, statistic) %>%
-  mutate(statistic = coalesce(statistic, 0)) %>% # change NAs to 0. These are stations with no change in light over time
+  select(STA, estimate, statistic) %>%
+  mutate(estimate = coalesce(estimate, 0),
+         statistic = coalesce(statistic, 0)) %>% # change NAs to 0. These are stations with no change in light over time
   rename(light_tstat = statistic) 
-  
+
+cor(light_tstat$estimate, light_tstat$light_tstat)
+
 ################################################
 #### Combine data frames containing t-statistics
 combined_t_stats <- left_join(FY_tstat, tempanom_tstat, by=c("STA", "SPEC")) %>%
   left_join(., prcp_total_tstat, by=c("STA", "SPEC")) %>% 
   left_join(., prcp_cov_tstat, by=c("STA", "SPEC")) %>%
-  left_join(., light_tstat, by="STA")
+  left_join(., light_tstat, by="STA") %>%
+  select(-contains("estimate"))
 
 #View(combined_t_stats)
-  
+
 # saving data frame
 saveRDS(combined_t_stats, here("Outputs", "combined_t_stats.rds"))

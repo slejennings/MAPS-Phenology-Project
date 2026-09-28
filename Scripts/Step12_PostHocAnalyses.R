@@ -1,5 +1,5 @@
 ###### MAPS Phenology #######
-### Script name: Step14_PosthocAnalyses.R
+### Script name: Step12_PosthocAnalyses.R
 ## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################

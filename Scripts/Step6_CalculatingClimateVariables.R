@@ -106,14 +106,14 @@ cor(prcp_DW_LW$prcp_DW_total, prcp_DW_LW$prcp_LW_total)
 ################ TEMPERATURE ANOMALY DATA ############################# 
 
 ##### Extract anomaly values #####
-# first, we need to  raster and extract values for the MAPS stations from the temperature anomaly raster
+# first, we need to the raster and extract values for the MAPS stations from the temperature anomaly raster
 # we will be using ras.global 
 
 # make a vector of MAPS stations
 sta <- stations$STA
 
 # store projection details for temperature anomalies as an object called crs_TA
-crs_TA <- crs(ras.global) # EPSG:4326 is the projection (+proj=longlat +datum=WGS84 +no_defs)
+crs_TA <- crs(ras.global)
 
 # make the station locations into spatial points and set CRS as NAD83
 sta_coord <- stations  %>% dplyr::select(DECLNG, DECLAT) %>% # keep columns DECLNG and DECLAT
@@ -121,7 +121,7 @@ sta_coord <- stations  %>% dplyr::select(DECLNG, DECLAT) %>% # keep columns DECL
 
 sta_points <- vect(sta_coord, crs ="EPSG:4269") # make the df into a vector and specify CRS as NAD83
 
-TA_points_prj <- sta_points %>% project(crs_TA) # project points to CRS of the temp anomaly layer
+TA_points_prj <- sta_points %>% terra::project(crs_TA) # project points to CRS of the temp anomaly layer
 
 # use the extract function from the terra package with the projected points to get temperature anomaly values for each station
 TA_pts_extract <- terra::extract(ras.global,TA_points_prj)

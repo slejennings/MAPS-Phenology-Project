@@ -157,7 +157,7 @@ dev.off()
 
 
 # combine identified species/stations/years with the actual capture data
-# keep only earliest FY birds for each species/station/year:
+# keep first FY birds for each species/station/year:
 FirstFY_spp30 <- capturedat_final %>% 
   mutate(SPEC_STA = paste(SPEC, STA, sep ="_"),
          date_capture = as.Date(DATE, format = "%Y-%m-%d")) %>% # convert capture date to date format %>%
@@ -169,7 +169,17 @@ FirstFY_spp30 <- capturedat_final %>%
   rename(date_1stcapture = date_capture) %>% # rename the column as it now reflects the date of the earliest capture
   mutate(doy_1stcapture = yday(date_1stcapture)) # add column that converts date to day of year (doy or julian date)
 
+####### Identify decision window and long term window
 
+# import breeding life history values from "The Birder's Handbook" by Ehrlich et al. 1988
+BreedingTimeline <- read_csv(here("Data", "BreedingTimeline.csv"))
+
+# keep only the average delay column, which will be used to estimate nest initiation date
+BreedingTimeline <- BreedingTimeline %>%
+  select(SPEC, DelayAvg) %>%
+  mutate(DelayAvg = round(DelayAvg))
+
+########## using earliest capture #############
 # get mean earliest capture date for each species and station
 mean1stcapture_spp30 <- FirstFY_spp30 %>%
   group_by(STA, SPEC) %>% # group data by station and species
@@ -182,16 +192,9 @@ FirstFY_final <- left_join(FirstFY_spp30, mean1stcapture_spp30) %>%
 # there are a lot of unnecessary columns here
 # I have simplified this but any of the dropped columns could be added back in during this step if needed
 
-# import breeding life history values from "The Birder's Handbook" by Ehrlich et al. 1988
-BreedingTimeline <- read_csv(here("Data", "BreedingTimeline.csv"))
-
-# keep only the average delay column, which will be used to estimate nest initiation date
-BreedingTimeline <- BreedingTimeline %>%
-  select(SPEC, DelayAvg) %>%
-  mutate(DelayAvg = round(DelayAvg))
-
 # calculate 30-day decision window and 60-day long-term window for temperature
 # using day of year
+
 window_doy <- FirstFY_final %>%
   left_join(BreedingTimeline, by = "SPEC") %>%
   mutate(SPEC_STA = paste(SPEC, STA, sep = "_")) %>%
@@ -229,7 +232,5 @@ HY_timeline_check <-
   mutate(intervalDW = (decision_end - decision_start) + 1,
          intervalLW = (decision_start - long_start_temp) + 1)
   
-
 # export for use in subsequent scripts
 saveRDS(HY_timeline, here("Outputs", "HY_timeline.rds"))
-

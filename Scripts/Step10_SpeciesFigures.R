@@ -1,10 +1,10 @@
 ###### MAPS Phenology #######
-### Script name: Step12_SpeciesFigures.R
+### Script name: Step10_SpeciesFigures.R
 ## Author(s): XXX (removed for peer review)
 
 ########## Objective/Description of Script #####################
 # this script creates multiple figures for the manuscript that accompanies this analysis
-# Fig 3: heatmap depicting the results of the species' models from Step8_BayesianSpeciesModels
+# Fig 3: heatmap depicting the results of the species' models from Step8_SpatialSpeciesModels
 # Fig 2: a histogram showing changes in breeding phenology across all species and stations
 # supplementary figures showing change in breeding phenology, change in light, change in climate for each species
 # supplementary figure (Fig S1) showing average change in breeding phenology, light, and climate with all species/populations pooled
@@ -27,10 +27,10 @@ library(ggtree)
 tree <- read.tree(here("Data", "Jetz_ConsensusPhy.tre"))
 
 # decision window model results
-dw_models <- readRDS(here("Models/Model Outputs", "dw_model_summaries.rds"))
+dw_models <- readRDS(here("Models/Model Outputs", "dw_freq_model_summaries.rds"))
 
 # long-term window model results
-lw_models <- readRDS(here("Models/Model Outputs", "lw_model_summaries.rds")) 
+lw_models <- readRDS(here("Models/Model Outputs", "lw_freq_model_summaries.rds")) 
 
 # Sheet to convert 4-letter bird codes to commonnames
 codetospec <- read_csv(here("Data", "BirdCodetoSpecies.csv")) %>%
@@ -53,37 +53,45 @@ eye <- read.csv(here("Data", "species_eyes.csv"))
 # we also need to give the light t-statistic a unique name to differentiate the DW vs LW model
 
 dw_models_wide <- dw_models %>%
-  filter(Parameter %in% c(
-    "scaletempanom_DW_tstat",
-    "scaleprcp_DW_total_tstat",
-    "scaleprcp_DW_cov_tstat",
-    "scalelight_tstat"
+  filter(term %in% c(
+    "scale(tempanom_DW_tstat)",
+    "scale(prcp_DW_total_tstat)",
+    "scale(prcp_DW_cov_tstat)",
+    "scale(light_tstat)"
   )) %>%
   rowwise() %>%
-  mutate(tvalue = Estimate/Est.Error) %>%
-  select(SPEC, Parameter, tvalue) %>%
+  mutate(tvalue = estimate/std.error) %>%
+  select(Species, term, tvalue) %>%
   pivot_wider(
-    names_from = Parameter,   # new column names from "Parameter"
+    names_from = term,   # new column names from "Parameter"
     values_from = tvalue) %>%  # values to fill from "tvalue"
-  rename(scalelight_DW_tstat = scalelight_tstat) # give light t-statistic a unique name
+  rename(scalelight_DW_tstat = 'scale(light_tstat)',
+         scaletempanom_DW_tstat = 'scale(tempanom_DW_tstat)',
+         scaleprcp_DW_total_tstat = 'scale(prcp_DW_total_tstat)',
+         scaleprcp_DW_cov_tstat = 'scale(prcp_DW_cov_tstat)'
+  ) # give light t-statistic a unique name
 
 lw_models_wide <- lw_models %>%
-  filter(Parameter %in% c(
-    "scaletempanom_LW_tstat",
-    "scaleprcp_LW_total_tstat",
-    "scaleprcp_LW_cov_tstat",
-    "scalelight_tstat"
+  filter(term %in% c(
+    "scale(tempanom_LW_tstat)",
+    "scale(prcp_LW_total_tstat)",
+    "scale(prcp_LW_cov_tstat)",
+    "scale(light_tstat)"
   )) %>%
   rowwise() %>%
-  mutate(tvalue = Estimate/Est.Error) %>%
-  select(SPEC, Parameter, tvalue) %>%
+  mutate(tvalue = estimate/std.error) %>%
+  select(Species, term, tvalue) %>%
   pivot_wider(
-    names_from = Parameter,   # new column names from "Parameter"
-    values_from = tvalue) %>%   # values to fill from "tvalue"
-  rename(scalelight_LW_tstat = scalelight_tstat) # give light t-statistic a unique name
-
+    names_from = term,   # new column names from "Parameter"
+    values_from = tvalue) %>%  # values to fill from "tvalue"
+  rename(scalelight_LW_tstat = 'scale(light_tstat)',
+         scaletempanom_LW_tstat = 'scale(tempanom_LW_tstat)',
+         scaleprcp_LW_total_tstat = 'scale(prcp_LW_total_tstat)',
+         scaleprcp_LW_cov_tstat = 'scale(prcp_LW_cov_tstat)'
+  )
 # combine t-statistics from both long-term and decision window models
-all_models_wide <- left_join(dw_models_wide, lw_models_wide)
+all_models_wide <- left_join(dw_models_wide, lw_models_wide) %>%
+  rename(SPEC = Species)
 
 # join all_models_wide with eye df that contains scientific names for species
 # also join to codetospec which shows how four letter bird codes translate to common names
@@ -137,7 +145,7 @@ treeplusheatmap <- gheatmap(
   font.size=3,
   hjust=0, 
   custom_column_labels = c("Temperature Anomaly - decision", "Temperature Anomaly - long", "Total Precipitation - decision", "Total Precipitation - long", "Precipitation Variability - decision", "Precipitation Variability - long", "Light Pollution - decision", "Light Pollution - long")) +
-  scale_fill_continuous_diverging(palette = "custom_bluegreen", n_interp=13, mid = 0, limits=c(-4.25,4.25), name="t-statistic", rev=F)+
+  scale_fill_continuous_diverging(palette = "custom_bluegreen", n_interp=13, mid = 0, limits=c(-4.4,4.4), name="t-statistic", rev=F)+
   vexpand(.2,1) +
   theme(axis.title.x = element_text(size = 8, face = "bold"),
         legend.title = element_text(size= 8),
@@ -145,7 +153,7 @@ treeplusheatmap <- gheatmap(
 
 treeplusheatmap
 
-# save
+ # save
 ggsave(treeplusheatmap, filename = "Fig3_TreePlusHeatMap.pdf", path = here("Figures"), width=20, height=21, units = "cm", device=cairo_pdf)
 ggsave(treeplusheatmap, filename = "Fig3_TreePlusHeatMap.png", path = here("Figures"), width=20, height=21, units = "cm")
 
