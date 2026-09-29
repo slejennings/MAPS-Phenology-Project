@@ -15,7 +15,7 @@
 "14","HWI","temperature anomaly","decision",20,"HWI",-0.015,0.055,-0.276,-0.124,0.093,0
 "15","HWI","temperature anomaly","long-term",20,"(Intercept)",-1.428,1.232,-1.159,-3.843,0.986,0
 "16","HWI","temperature anomaly","long-term",20,"HWI",0.008,0.056,0.142,-0.101,0.117,0
-"17","C.T","light pollution","decision",18,"(Intercept)",2.771,3.436,0.807,-3.963,9.506,0
-"18","C.T","light pollution","decision",18,"C.T",-6.109,6.942,-0.88,-19.715,7.497,0
-"19","C.T","light pollution","long-term",18,"(Intercept)",3.673,2.945,1.247,-2.099,9.446,0
-"20","C.T","light pollution","long-term",18,"C.T",-7.569,5.95,-1.272,-19.23,4.092,0
+"17","C.T","light pollution","decision",19,"(Intercept)",2.596,3.321,0.782,-3.913,9.105,0
+"18","C.T","light pollution","decision",19,"C.T",-5.695,6.688,-0.852,-18.804,7.413,0
+"19","C.T","light pollution","long-term",19,"(Intercept)",3.609,2.835,1.273,-1.948,9.166,0
+"20","C.T","light pollution","long-term",19,"C.T",-7.418,5.71,-1.299,-18.609,3.773,0

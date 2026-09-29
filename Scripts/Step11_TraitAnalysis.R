@@ -106,9 +106,9 @@ traits_20spp <- all_models_traits %>%
   mutate(Species = str_replace(Tree_name, "_", " ")) %>% 
   column_to_rownames(., var = "Tree_name")
 
-# for eye morphometrics, we only have values for 18 species
+# for eye morphometrics, we only have values for 19 species
 # move the Tree_name column to rownames to facilitate pairing data with phylogenetic tree
-eye_18spp <- all_models_traits %>%
+eye_19spp <- all_models_traits %>%
   filter(!is.na(C.T)) %>%
   mutate(Species = str_replace(Tree_name, "_", " ")) %>%
   column_to_rownames(., var = "Tree_name")
@@ -126,16 +126,16 @@ birddat_20spp <- as.data.frame(phydat_20spp$data) %>% # convert to df
   mutate(across(c(scalelight_DW_tstat:AnnualPrecip_cm), as.numeric)) # make sure columns that need to be are numeric
 birddat_20spp$species2 <- rownames(birddat_20spp)
 
-#### For 18 species with eye morphometrics ####
-phydat_18spp <- geiger::treedata(tree, eye_18spp, sort=T) # join tree with data
+#### For 19 species with eye morphometrics ####
+phydat_19spp <- geiger::treedata(tree, eye_19spp, sort=T) # join tree with data
 
-birdtree_18spp <- phydat_18spp$phy # this is our trimmed tree for the 18 species
+birdtree_19spp <- phydat_19spp$phy # this is our trimmed tree for the 19 species
 
 # these are the data associated with our trimmed tree
-birddat_18spp <- as.data.frame(phydat_18spp$data) %>% # convert to df
+birddat_19spp <- as.data.frame(phydat_19spp$data) %>% # convert to df
   mutate(across(c(scalelight_DW_tstat:AnnualPrecip_cm), as.numeric)) # make sure columns that need to be are numeric
 
-birddat_18spp$species2 <- rownames(birddat_18spp)
+birddat_19spp$species2 <- rownames(birddat_19spp)
 
 ####################################################################################
 ##### Trait models with STI (species temperature index)
@@ -312,19 +312,19 @@ check_model(temp_HWI_lw2)
 ##### Trait models with C.T (eye morphology)
 ####################################################################################
 
-# use birdtree_18spp as the tree and birddat_18spp for the data in these models
-colnames(birddat_18spp)
+# use birdtree_19spp as the tree and birddat_19spp for the data in these models
+colnames(birddat_19spp)
 
 ######## Light pollution in decision window ##############
 
 # fixed lambda at zero because estimated at zero using phylolm
 light_CT_dw <- gls(scalelight_DW_tstat ~ C.T + Body_mass_log, 
-                   data = birddat_18spp, 
-                   correlation = corPagel(0, phy = birdtree_18spp, fixed=T, form =~species2), method = "ML")
+                   data = birddat_19spp, 
+                   correlation = corPagel(0, phy = birdtree_19spp, fixed=T, form =~species2), method = "ML")
 
 light_CT_dw2 <- gls(scalelight_DW_tstat ~ C.T , 
-                   data = birddat_18spp, 
-                   correlation = corPagel(0, phy = birdtree_18spp, fixed=T, form =~species2), method = "ML")
+                   data = birddat_19spp, 
+                   correlation = corPagel(0, phy = birdtree_19spp, fixed=T, form =~species2), method = "ML")
 
 anova(light_CT_dw, light_CT_dw2)  # no support for model with body mass
 
@@ -338,12 +338,12 @@ check_model(light_CT_dw2)
 
 # fixed lambda at zero because estimated at zero using phylolm
 light_CT_lw <- gls(scalelight_LW_tstat ~ C.T + Body_mass_log, 
-                   data = birddat_18spp, 
-                   correlation = corPagel(0, phy = birdtree_18spp, fixed=T, form=~species2), method = "ML")
+                   data = birddat_19spp, 
+                   correlation = corPagel(0, phy = birdtree_19spp, fixed=T, form=~species2), method = "ML")
 
 light_CT_lw2 <- gls(scalelight_LW_tstat ~ C.T, 
-                   data = birddat_18spp, 
-                   correlation = corPagel(0, phy = birdtree_18spp, fixed=T, form=~species2), method = "ML")
+                   data = birddat_19spp, 
+                   correlation = corPagel(0, phy = birdtree_19spp, fixed=T, form=~species2), method = "ML")
 
 anova(light_CT_lw, light_CT_lw2) # no support for model with body mass
 
