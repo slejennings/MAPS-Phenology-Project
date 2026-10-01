@@ -24,10 +24,10 @@ library(broom.mixed)
 #### Import files
 
 # decision window models
-dw_models <- readRDS(here("Models/Model Outputs", "dw_model_summaries.rds"))
+dw_models <- readRDS(here("Models", "dw_model_summaries.rds"))
 
 # long-term window models
-lw_models <- readRDS(here("Models/Model Outputs", "lw_model_summaries.rds"))
+lw_models <- readRDS(here("Models", "lw_model_summaries.rds"))
 
 # eye morphometrics
 eye <- read.csv(here("Data", "species_eyes.csv"), header=T)
@@ -353,7 +353,7 @@ check_model(light_CT_lw2)
 
 
 ####################################################################################
-##### Fig 4: Panel of trait plots
+##### Fig 4:STI trait plot
 ####################################################################################
 
 ###### using temp_STI_lw ##########
@@ -481,4 +481,4 @@ trait_results <- bind_rows(temp_STI_dw_tidy, temp_STI_lw_tidy, totalprcp_annualp
                            covprcp_annualprcp_dw_tidy, covprcp_annualprcp_lw_tidy, temp_HWI_dw_tidy, temp_HWI_lw_tidy, light_CT_dw_tidy, light_CT_lw_tidy) %>%
   select(trait, response_variable, window, sample_size, term:conf.high, lambda)
 
-write.csv(trait_results, here("Models/Model Outputs", "traitmodels.csv"))
+write.csv(trait_results, here("Models", "traitmodels.csv"))

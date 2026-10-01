@@ -163,10 +163,10 @@ save_residual_plots_lw <- function(SPEC, model) {
 map2(lw.mods.df$SPEC, lw.mods.df$model, save_residual_plots_lw)
 
 # save and export models and model summaries
-saveRDS(lwsppmods_matern, here("Models/Model Outputs", "lw_model_summaries.rds"))
-saveRDS(dwsppmods_matern, here("Models/Model Outputs", "dw_model_summaries.rds"))
-write.csv(lwsppmods_matern, here("Models/Model Outputs", "lw_model_summaries.csv"))
-write.csv(dwsppmods_matern, here("Models/Model Outputs", "dw_model_summaries.csv"))
-saveRDS(lw.mods.df, here("Models/Model Outputs", "lw_models.rds"))
-saveRDS(dw.mods.df, here("Models/Model Outputs", "dw_models.rds"))
+saveRDS(lwsppmods_matern, here("Models", "lw_model_summaries.rds"))
+saveRDS(dwsppmods_matern, here("Models", "dw_model_summaries.rds"))
+write.csv(lwsppmods_matern, here("Models", "lw_model_summaries.csv"))
+write.csv(dwsppmods_matern, here("Models", "dw_model_summaries.csv"))
+saveRDS(lw.mods.df, here("Models", "lw_models.rds"))
+saveRDS(dw.mods.df, here("Models", "dw_models.rds"))
 

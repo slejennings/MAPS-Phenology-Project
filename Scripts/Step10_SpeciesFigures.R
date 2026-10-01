@@ -27,10 +27,10 @@ library(ggtree)
 tree <- read.tree(here("Data", "Jetz_ConsensusPhy.tre"))
 
 # decision window model results
-dw_models <- readRDS(here("Models/Model Outputs", "dw_freq_model_summaries.rds"))
+dw_models <- readRDS(here("Models", "dw_freq_model_summaries.rds"))
 
 # long-term window model results
-lw_models <- readRDS(here("Models/Model Outputs", "lw_freq_model_summaries.rds")) 
+lw_models <- readRDS(here("Models", "lw_freq_model_summaries.rds")) 
 
 # Sheet to convert 4-letter bird codes to commonnames
 codetospec <- read_csv(here("Data", "BirdCodetoSpecies.csv")) %>%
